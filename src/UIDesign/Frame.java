@@ -1,5 +1,6 @@
 package UIDesign;
 
+import com.toedter.calendar.JCalendar;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -28,7 +29,7 @@ public class Frame extends JFrame {
         settingPage.launchPanel();
         this.add(settingPage);
 
-        this.setTitle("首页");
+        this.setTitle("单词记忆软件");
         this.setVisible(true);
     }
 }
@@ -51,6 +52,7 @@ class HomePage extends JPanel {
         setting.setBounds(pageMarginWidth, pageMarginHeight+pageSpace, pageButtonSize, pageButtonSize);
         setting.addActionListener(e -> {
             Frame.homePage.setVisible(false);
+
             Frame.settingPage.setVisible(true);
         });
         graph = new JButton("记忆曲线");
@@ -86,11 +88,16 @@ class HomePage extends JPanel {
 class SettingPage extends JPanel {
     JButton back, information, star;
     JPanel pagePanel, informationPanel;
-    JLabel head, username, userInfo;//头像
+    JLabel head, username, userInfo;
+    JCalendar calendar;
     int headX = 200, headY = 100;
     int headWidth = 200, headHeight = 200;
     int usernameX = 200, usernameY = 320;
     int usernameWidth = 200, usernameHeight = 40;
+    int userInfoX = 170, userInfoY = 400;
+    int userInfoWidth = 260, userInfoHeight = 300;
+    int calendarX = 450, calendarY = 150;
+    int calendarWidth = 700, calendarHeight = 600;
     public void launchPanel(){
         this.setLayout(null);
         this.setBounds(0,0,FRAME_WIDTH,FRAME_HEIGHT);
@@ -130,10 +137,17 @@ class SettingPage extends JPanel {
         informationPanel.add(username);
         //信息
         userInfo = new JLabel();
-        head.setBounds(headX, headY, headWidth, headHeight);
-        head.setText("头像");
-        head.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-        informationPanel.add(head);
+        userInfo.setBounds(userInfoX, userInfoY, userInfoWidth, userInfoHeight);
+        userInfo.setText("<html>手机   "+"00011110000"+"<br/><br/><br/>"+
+                        "邮箱   "+"123456@qq.com"+"<br/><br/><br/>"+
+                        "学习目标 "+"托福</html>");
+        userInfo.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        informationPanel.add(userInfo);
+
+        //日历
+        calendar = new JCalendar();
+        calendar.setBounds(calendarX, calendarY, calendarWidth, calendarHeight);
+        informationPanel.add(calendar);
 
         this.add(informationPanel);
         this.setVisible(true);
