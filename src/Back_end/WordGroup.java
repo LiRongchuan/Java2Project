@@ -12,15 +12,20 @@ public class WordGroup {
     private boolean Need_to_Review;
     private final double E_threshold = 0.22524324;
 
+    private Curve curve;
+
     public WordGroup() {
         Need_to_Review = true;
+        curve = new Curve(0.0,0.3,1.0);
     }
 
     public void SetContain(int[] Set) {
         Contain = Set;
     }
-    public Timestamp Calculate_Next_Review_Time(int R,Timestamp T) {
+
+    public Timestamp Calculate_Next_Review_Time(int R, Timestamp T) {
         Timestamp retT = T;
+        //todo:
         return retT;
     }
 
@@ -72,7 +77,16 @@ public class WordGroup {
         return Full_Mark_in_a_Row;
     }
 
-    public void Update_Mark(int Mark,Timestamp Review_Time) {
+
+    public Curve getCurve() {
+        return curve;
+    }
+
+    public void setCurve(Curve curve) {
+        this.curve = curve;
+    }
+
+    public void Update_Mark(int Mark, Timestamp Review_Time) {
         Last_Rate_of_Correct = Mark;
         S = 0.3 + 0.02 * (1.0 * Mark / 10);
         Next_Review_Time = Calculate_Next_Review_Time(Mark, Review_Time);
