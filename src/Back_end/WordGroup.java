@@ -24,12 +24,6 @@ public class WordGroup {
         return retT;
     }
 
-    public void Update(int Correct_Rate,Timestamp Review_Time) {
-        Last_Rate_of_Correct = Correct_Rate;
-        S = 0.3 + 0.02 * (1.0 * Correct_Rate / 10);
-        Next_Review_Time = Calculate_Next_Review_Time(Correct_Rate, Review_Time);
-    }
-
     public double getE_threshold() {
         return E_threshold;
     }
@@ -78,8 +72,10 @@ public class WordGroup {
         return Full_Mark_in_a_Row;
     }
 
-    public void Update_Mark(int Mark) {
+    public void Update_Mark(int Mark,Timestamp Review_Time) {
         Last_Rate_of_Correct = Mark;
+        S = 0.3 + 0.02 * (1.0 * Mark / 10);
+        Next_Review_Time = Calculate_Next_Review_Time(Mark, Review_Time);
         if (Mark == 10) Full_Mark_in_a_Row++;
         else Full_Mark_in_a_Row = 0;
         if (Full_Mark_in_a_Row == 3) Need_to_Review = false;
