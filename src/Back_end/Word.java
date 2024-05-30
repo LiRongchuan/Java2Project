@@ -1,4 +1,4 @@
-package back_end;
+package Back_end;
 
 public class Word {
 }
