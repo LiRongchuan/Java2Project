@@ -5,7 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e75b8209-fd3c-432c-957e-2b066b66258d" name="更改" comment="更改">
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Back_end/Index.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Back_end/WordGroup.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Back_end/WordList.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/back_end/Word.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Back_end/Word.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,6 +103,14 @@
       <option name="presentableId" value="Default" />
       <updated>1715954241787</updated>
     </task>
+    <task id="LOCAL-00001" summary="更改">
+      <created>1717071355543</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1717071355543</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -108,5 +123,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="更改" />
+    <option name="LAST_COMMIT_MESSAGE" value="更改" />
   </component>
 </project>
