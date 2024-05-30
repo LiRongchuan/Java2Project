@@ -1,26 +1,38 @@
 package Back_end;
 
 public class Word {
-    private int number;
-    private String word;
-    private boolean like;
+    private int id;
+    private String english;
     private String chinese;
+    private boolean liked;
+
     private String[] Choices = new String[4];
     private int Correct_option;
-    public String getWord() {
-        return word;
+
+    public Word(int id, String english, String chinese,
+                boolean liked, String[] choices, int correct_option) {
+        this.id = id;
+        this.english = english;
+        this.chinese = chinese;
+        this.liked = liked;
+        Choices = choices;
+        Correct_option = correct_option;
     }
 
-    public boolean isLike() {
-        return like;
+    public String getEnglish() {
+        return english;
     }
 
-    public int getNumber() {
-        return number;
+    public boolean isLiked() {
+        return liked;
     }
 
-    public void setWord(String word) {
-        this.word = word;
+    public int getId() {
+        return id;
+    }
+
+    public void setEnglish(String english) {
+        this.english = english;
     }
 
     public String getChinese() {
@@ -31,12 +43,12 @@ public class Word {
         this.chinese = chinese;
     }
 
-    public void setLike(boolean like) {
-        this.like = like;
+    public void setLiked(boolean liked) {
+        this.liked = liked;
     }
 
-    public void setNumber(int number) {
-        this.number = number;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setChoices(String[] choices) {
@@ -53,5 +65,12 @@ public class Word {
 
     public void setCorrect_option(int correct_option) {
         Correct_option = correct_option;
+    }
+
+    public void shuffleOptions(boolean refresh_flag) {
+        if (refresh_flag) {
+            //todo: after each time of reciting, shuffle the 4 options of a word
+        }
+        //todo: write files again
     }
 }
