@@ -1,7 +1,6 @@
 package Back_end;
 
 public class Word {
-<<<<<<< HEAD
     private int number;
     private String word;
     private boolean like;
@@ -55,6 +54,4 @@ public class Word {
     public void setCorrect_option(int correct_option) {
         Correct_option = correct_option;
     }
-=======
->>>>>>> origin/main
 }
