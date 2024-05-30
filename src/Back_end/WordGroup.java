@@ -109,6 +109,5 @@ public class WordGroup {
         if (Mark == 10) Full_Mark_in_a_Row++;
         else Full_Mark_in_a_Row = 0;
         if (Full_Mark_in_a_Row == 3) Need_to_Review = false;
-        //todo: Is it necessary to remove the wordGroup from wordBook?
     }
 }

@@ -84,7 +84,7 @@ public class WordBook {
                             full_mark_in_a_row, need_to_review);
                 } else if (isMetadata) {
                     //todo: if there is other data needed to store in the files
-                    String[] parts = line.split(",");
+                    String[] parts = line.split(":");
                     metadata.put(parts[0], parts[1]);
                 }
             }
