@@ -9,11 +9,16 @@ public class Curve {
         E = e;
     }
 
+    public Curve(double r, double s) {
+        R = r;
+        S = s;
+    }
 
+    //todo: 怎么用？
     public void updateCurve(double R, long t, long T) {
         this.R = R;
         this.S = 0.3 + R * 0.2;
-        this.E = Math.pow(R, (double) t - T) * S;
+        this.E = Math.pow(R, (t-T) * 1.0 / S);
     }
 
     public double getR() {
