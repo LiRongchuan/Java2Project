@@ -4,11 +4,16 @@ import com.toedter.calendar.JCalendar;
 import org.jfree.chart.*;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
-
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Vector;
+
 
 import static UIDesign.Util.*;
 
@@ -16,6 +21,8 @@ public class Frame extends JFrame {
     public static HomePage homePage;
     public static SettingPage settingPage;
     public static ChartPage chartPage;
+
+    public static StarPage starPage;
 
     public void launchFrame(){
         this.setLayout(null);
@@ -30,10 +37,14 @@ public class Frame extends JFrame {
         homePage = new HomePage();
         homePage.launchPanel();
         this.add(homePage);
-        /**/
+
         settingPage = new SettingPage();
         settingPage.launchPanel();
         this.add(settingPage);
+        /**/
+        starPage = new StarPage();
+        starPage.launchPanel();
+        this.add(starPage);
         /**/
         chartPage = new ChartPage();
         this.add(chartPage);
@@ -130,7 +141,10 @@ class SettingPage extends JPanel {
         information.setBounds(pageMarginWidth, pageMarginHeight+pageSpace, pageButtonSize, pageButtonSize);
         star = new JButton("收藏单词");
         star.setBounds(pageMarginWidth, pageMarginHeight+2*pageSpace, pageButtonSize, pageButtonSize);
-        star.addActionListener(e -> Frame.settingPage.setVisible(false));
+        star.addActionListener(e -> {
+            Frame.settingPage.setVisible(false);
+            Frame.starPage.setVisible(true);
+        });
         pagePanel.add(back);
         pagePanel.add(information);
         pagePanel.add(star);
@@ -260,5 +274,129 @@ class ChartPage extends JPanel {
         chartPanel.setChart(lineChart);
         chartPanel.revalidate();
         chartPanel.repaint();
+    }
+}
+class StarPage extends JPanel {
+    JButton back, information, star;
+    JPanel pagePanel, wordPanel;
+    WordManagerPanel wordManagerPanel;
+    int wordPanelX = 200, wordPanelY = 200;
+    int wordPanelWidth = 800, wordPanelHeight = 800;
+    public void launchPanel(){
+        this.setLayout(null);
+        this.setBounds(0,0,FRAME_WIDTH,FRAME_HEIGHT);
+        this.setVisible(false);
+        pagePanel = new JPanel();
+        pagePanel.setBounds(0, 0, FRAME_WIDTH*2/10, FRAME_HEIGHT);
+        pagePanel.setLayout(null);
+        back = new JButton("返回");
+        back.setBounds(pageMarginWidth, pageMarginHeight, pageButtonSize, pageButtonSize);
+        back.addActionListener(e -> {
+            Frame.starPage.setVisible(false);
+            Frame.homePage.setVisible(true);
+        });
+        information = new JButton("资料");
+        information.setBounds(pageMarginWidth, pageMarginHeight+pageSpace, pageButtonSize, pageButtonSize);
+        information.addActionListener(e -> {
+            Frame.starPage.setVisible(false);
+            Frame.settingPage.setVisible(true);
+        });
+        star = new JButton("收藏单词");
+        star.setBounds(pageMarginWidth, pageMarginHeight+2*pageSpace, pageButtonSize, pageButtonSize);
+
+        pagePanel.add(back);
+        pagePanel.add(information);
+        pagePanel.add(star);
+        this.add(pagePanel);
+
+
+        wordPanel = new JPanel();
+        wordPanel.setBounds(FRAME_WIDTH*2/10, 0, FRAME_WIDTH*8/10, FRAME_HEIGHT);
+        //bookPanel.setLayout(new FlowLayout()); // 使用FlowLayout作为示例，可以根据需要更改布局管理器
+        wordPanel.setLayout(null);
+        wordManagerPanel = new WordManagerPanel();
+        wordManagerPanel.setBounds(wordPanelX, wordPanelY, wordPanelWidth, wordPanelHeight);
+        wordPanel.add(wordManagerPanel);
+        this.add(wordPanel);
+
+    }
+}
+class WordManagerPanel extends JPanel {
+    JTable table;
+    DefaultTableModel model;
+    CheckBoxRenderer checkBoxRenderer;
+    CheckBoxEditor checkBoxEditor;
+
+    public WordManagerPanel() {
+        // 初始化表格模型
+        String[] columnNames = {"选择", "单词", "意义", "词书"};
+        model = new DefaultTableModel(columnNames, 0) {
+            @Override
+            public Class<?> getColumnClass(int columnIndex) {
+                return columnIndex == 0 ? Boolean.class : String.class;
+            }
+        };
+
+        // 创建复选框渲染器和编辑器
+        checkBoxRenderer = new CheckBoxRenderer();
+        checkBoxEditor = new CheckBoxEditor();
+
+        // 创建表格
+        table = new JTable(model) {
+            @Override
+            public TableCellEditor getCellEditor(int row, int column) {
+                if (column == 0) {
+                    return checkBoxEditor;
+                }
+                return super.getCellEditor(row, column);
+            }
+
+            @Override
+            public TableCellRenderer getCellRenderer(int row, int column) {
+                if (column == 0) {
+                    return checkBoxRenderer;
+                }
+                return super.getCellRenderer(row, column);
+            }
+        };
+
+        // 添加数据到表格
+        for (int i = 0; i < 5; i++) {
+            Vector<Object> rowData = new Vector<>();
+            rowData.add(false); // 多选框状态，默认未选中
+            rowData.add("单词" + (i + 1));
+            rowData.add("意义" + (i + 1));
+            rowData.add("词书" + (i + 1)); // 添加词书数据
+            model.addRow(rowData);
+        }
+
+        // 设置复选框列的宽度
+        TableColumn checkBoxColumn = table.getColumnModel().getColumn(0);
+        checkBoxColumn.setPreferredWidth(30);
+        checkBoxColumn.setMaxWidth(30);
+
+        // 添加表格到面板
+        JScrollPane scrollPane = new JScrollPane(table);
+        add(scrollPane, BorderLayout.CENTER);
+    }
+
+    // 自定义复选框渲染器
+    static class CheckBoxRenderer extends JCheckBox implements TableCellRenderer {
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            setSelected((Boolean) value);
+            return this;
+        }
+    }
+
+    // 自定义复选框编辑器
+    static class CheckBoxEditor extends DefaultCellEditor {
+        public CheckBoxEditor() {
+            super(new JCheckBox());
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            return ((JCheckBox)editorComponent).isSelected();
+        }
     }
 }

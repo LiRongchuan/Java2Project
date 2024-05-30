@@ -6,6 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="e75b8209-fd3c-432c-957e-2b066b66258d" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UIDesign/Frame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UIDesign/Frame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UIDesign/Util.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UIDesign/Util.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,7 +48,7 @@
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
   }
 }</component>
-  <component name="RunManager" selected="应用程序.ImportFileGUI">
+  <component name="RunManager" selected="应用程序.Main">
     <configuration name="ImportFileGUI" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="UIDesign.ImportFileGUI" />
       <module name="Project" />
@@ -80,10 +82,38 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="MainFrame" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="UIDesign.MainFrame" />
+      <module name="Project" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="UIDesign.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="WordManager" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="UIDesign.WordManager" />
+      <module name="Project" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="UIDesign.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="应用程序.ImportFileGUI" />
         <item itemvalue="应用程序.Main" />
+        <item itemvalue="应用程序.MainFrame" />
+        <item itemvalue="应用程序.WordManager" />
+        <item itemvalue="应用程序.ImportFileGUI" />
         <item itemvalue="应用程序.LineChartExample" />
       </list>
     </recent_temporary>
