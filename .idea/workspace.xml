@@ -5,6 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e75b8209-fd3c-432c-957e-2b066b66258d" name="更改" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/guicedee_services_jfreechart.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Project.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/UIDesign/Frame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UIDesign/Frame.java" afterDir="false" />
@@ -41,13 +42,27 @@
     "Repository.Attach.Sources": "false",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "last_opened_file_path": "E:/自用/Java/project/2048",
     "project.structure.last.edited": "库",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.2"
   }
 }]]></component>
-  <component name="RunManager">
+  <component name="RunManager" selected="应用程序.Main">
+    <configuration name="LineChartExample" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="UIDesign.LineChartExample" />
+      <module name="Project" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="UIDesign.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="Project" />
@@ -58,6 +73,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="应用程序.Main" />
+        <item itemvalue="应用程序.LineChartExample" />
       </list>
     </recent_temporary>
   </component>
