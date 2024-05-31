@@ -28,7 +28,7 @@ public class Reciteword extends JPanel {
         headingPanel.setBackground(Color.PINK);
         headingPanel.setLayout(null);
         back = new JButton("返回");
-        back.setBounds(10,0, 80, 50);
+        back.setBounds(10,5, 80, 50);
         back.addActionListener(e -> {
             Frame.reciteword.setVisible(false);
             Frame.homePage.setVisible(true);
