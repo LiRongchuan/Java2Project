@@ -91,6 +91,29 @@ public class WordBook {
         }
     }
 
+    public void Generate_Word_Groups() {
+        int grp=1,tot=0,ingroup=0;
+        WordGroup wg = new WordGroup();
+        int[] num = new int[10];
+        while (tot<words.size()) {
+            Word wd = words.get(tot);
+            num[ingroup]=wd.getId();
+            tot++;
+            ingroup++;
+            if (ingroup==10) {
+                wg.setContain(num);
+                wg.setGroupNum(grp);
+                wordGroups.add(wg);
+                wg = new WordGroup();
+                grp++;
+                ingroup=0;
+            }
+        }
+        for (int i=ingroup;i<10;i++) num[i]=0;
+        wg.setContain(num);
+        wg.setGroupNum(grp);
+        wordGroups.add(wg);
+    }
     public void saveWordsToFile() throws IOException {
         try (BufferedWriter writer = new BufferedWriter())
     }
