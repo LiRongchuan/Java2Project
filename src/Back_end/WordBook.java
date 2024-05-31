@@ -3,10 +3,7 @@ package Back_end;
 import java.io.*;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class WordBook {
     private File fileLocation;
@@ -115,9 +112,34 @@ public class WordBook {
         wordGroups.add(wg);
     }
     public void saveWordsToFile() throws IOException {
-        try (BufferedWriter writer = new BufferedWriter())
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(this.fileLocation)));
+        writer.write("WordList:\n");
+        for (Word word: words) {
+            writer.write(word.toString());
+        }
+        writer.flush();
+        writer.write("WordGroups\n");
+        for (WordGroup wordGroup : wordGroups) {
+            writer.write(wordGroup.toString());
+        }
+        writer.flush();
     }
 
+    public WordGroup Get_Word_Groups_To_Memory() {
+        ArrayList<WordGroup> wg = new ArrayList<>();
+        for (WordGroup wordGroup : wordGroups) {
+            if (wordGroup.isNeed_to_Review()) wg.add(wordGroup);
+        }
+        wg.sort(new Comparator<WordGroup>() {
+            @Override
+            public int compare(WordGroup o1, WordGroup o2) {
+                double E1=o1.getCurve().getE(),E2=o2.getCurve().getE();
+                if (E1<=E2) return 1;
+                return -1;
+            }
+        });
+        return wg.get(0);
+    }
     public File getFileLocation() {
         return fileLocation;
     }
