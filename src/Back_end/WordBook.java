@@ -22,6 +22,7 @@ public class WordBook {
         this.metadata = new HashMap<>();
     }
 
+    //读取词书文件
     public void loadWordFromFile() throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(fileLocation))) {
             String line;
@@ -91,6 +92,7 @@ public class WordBook {
         }
     }
 
+    //选择具有最低记忆成都(E值)的词组来进行词书背诵
     public void Generate_Word_Groups() {
         int grp = 1, tot = 0, ingroup = 0;
         WordGroup wg = new WordGroup();
@@ -115,6 +117,7 @@ public class WordBook {
         wordGroups.add(wg);
     }
 
+    //存入词书
     public void saveWordsToFile() throws IOException {
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(this.fileLocation)));
         writer.write("WordList:\n");

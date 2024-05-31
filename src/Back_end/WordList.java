@@ -62,6 +62,7 @@ public class WordList {
         this.metadata = new HashMap<>();
     }
 
+    //读取词典文件
     public void loadWordFromFile() throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(fileLocation))) {
             String line;
