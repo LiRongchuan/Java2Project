@@ -338,11 +338,9 @@ class WordManagerPanel extends JPanel {
                 return columnIndex == 0 ? Boolean.class : String.class;
             }
         };
-
         // 创建复选框渲染器和编辑器
         checkBoxRenderer = new CheckBoxRenderer();
         checkBoxEditor = new CheckBoxEditor();
-
         // 创建表格
         table = new JTable(model) {
             @Override
@@ -352,7 +350,6 @@ class WordManagerPanel extends JPanel {
                 }
                 return super.getCellEditor(row, column);
             }
-
             @Override
             public TableCellRenderer getCellRenderer(int row, int column) {
                 if (column == 0) {
@@ -361,7 +358,6 @@ class WordManagerPanel extends JPanel {
                 return super.getCellRenderer(row, column);
             }
         };
-
         // 添加数据到表格
         for (int i = 0; i < 5; i++) {
             Vector<Object> rowData = new Vector<>();
@@ -371,11 +367,11 @@ class WordManagerPanel extends JPanel {
             rowData.add("词书" + (i + 1)); // 添加词书数据
             model.addRow(rowData);
         }
-
         // 设置复选框列的宽度
         TableColumn checkBoxColumn = table.getColumnModel().getColumn(0);
         checkBoxColumn.setPreferredWidth(30);
         checkBoxColumn.setMaxWidth(30);
+
 
         // 添加表格到面板
         JScrollPane scrollPane = new JScrollPane(table);
@@ -389,13 +385,11 @@ class WordManagerPanel extends JPanel {
             return this;
         }
     }
-
     // 自定义复选框编辑器
     static class CheckBoxEditor extends DefaultCellEditor {
         public CheckBoxEditor() {
             super(new JCheckBox());
         }
-
         @Override
         public Object getCellEditorValue() {
             return ((JCheckBox)editorComponent).isSelected();

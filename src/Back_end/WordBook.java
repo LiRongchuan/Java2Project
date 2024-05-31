@@ -92,7 +92,7 @@ public class WordBook {
     }
 
     public void saveWordsToFile() throws IOException {
-        try (BufferedWriter writer = new BufferedWriter())
+        //try (BufferedWriter writer = new BufferedWriter()){}
     }
 
     public File getFileLocation() {
