@@ -67,6 +67,14 @@ public class Word {
         Correct_option = correct_option;
     }
 
+    @Override
+    public String toString() {
+        String s = new String();
+        s+=id;
+        s+=","+english+","+chinese+","+liked+","+Choices[0]+","+Choices[1]+","+Choices[2]+","+Choices[3]+","+Correct_option+"\n";
+        return s;
+    }
+
     public void shuffleOptions(boolean refresh_flag) {
         if (refresh_flag) {
             //todo: after each time of reciting, shuffle the 4 options of a word

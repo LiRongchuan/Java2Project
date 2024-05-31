@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class Index {
     private ArrayList<String> index_wordbook = new ArrayList<>();
-    private final String FileIndex = "";
+    private final String FileIndex = "index.txt";
     public void setIndex_wordbook(String new_wordbook) throws IOException {
         this.index_wordbook.add(new_wordbook);
         PrintIndex();
@@ -28,7 +28,7 @@ public class Index {
         String index = "";
         File file = new File(FileIndex);
         Scanner scanner;
-        if (file.exists()) {
+        if (!file.exists()) {
             file.createNewFile();
         }
         scanner = new Scanner(file);

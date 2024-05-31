@@ -41,6 +41,8 @@ public class WordGroup {
     public Timestamp Calculate_Next_Review_Time(int R, Timestamp T) {
         Timestamp retT = T;
         //todo:
+        double delta = Math.log(E_threshold)*S;
+        retT = new Timestamp(T.getTime()+(long) (delta*1000*60*60*24));
         return retT;
     }
 
@@ -104,10 +106,26 @@ public class WordGroup {
     public void Update_Mark(int Mark, Timestamp Review_Time) {
         Last_Number_of_Correctness = Mark;
         S = 0.3 + 0.02 * (1.0 * Mark / 10);
-        //todo: update memory curve
+        //todo: update memory curv
         Next_Review_Time = Calculate_Next_Review_Time(Mark, Review_Time);
         if (Mark == 10) Full_Mark_in_a_Row++;
         else Full_Mark_in_a_Row = 0;
         if (Full_Mark_in_a_Row == 3) Need_to_Review = false;
+        Next_Review_Time = Calculate_Next_Review_Time(Mark, Review_Time);
+    }
+
+    @Override
+    public String toString() {
+        String s = new String();
+        s+=GroupNum+",";
+        for (int i=0;i<10;i++) {
+            s+=Contain[i]+",";
+        }
+        s+=Last_Number_of_Correctness+",";
+        s+=Next_Review_Time.getTime()+",";
+        s+=S+",";
+        s+=Full_Mark_in_a_Row+",";
+        s+=Need_to_Review+"\n";
+        return s;
     }
 }

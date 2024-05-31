@@ -21,9 +21,9 @@ public class Frame extends JFrame {
     public static HomePage homePage;
     public static SettingPage settingPage;
     public static ChartPage chartPage;
+    public static Reciteword reciteword;
 
     public static StarPage starPage;
-    public static Reciteword reciteword;
 
     public void launchFrame(){
         this.setLayout(null);
@@ -41,16 +41,24 @@ public class Frame extends JFrame {
 
         settingPage = new SettingPage();
         settingPage.launchPanel();
+        settingPage.setVisible(false);
         this.add(settingPage);
         /**/
         starPage = new StarPage();
         starPage.launchPanel();
+        starPage.setVisible(false);
         this.add(starPage);
         /**/
         chartPage = new ChartPage();
-        this.add(chartPage);
         chartPage.launchPanel();
+        chartPage.setVisible(false);
+        this.add(chartPage);
 
+        /**/
+        reciteword = new Reciteword();
+        reciteword.launchPanel();
+        reciteword.setVisible(false);
+        this.add(reciteword);
 
 
         this.setTitle("单词记忆软件");
@@ -67,23 +75,25 @@ class HomePage extends JPanel {
         this.setLayout(null);
         this.setBounds(0,0,FRAME_WIDTH,FRAME_HEIGHT);
         pagePanel = new JPanel();
-        pagePanel.setBounds(0, 0, FRAME_WIDTH*2/10, FRAME_HEIGHT);
+        pagePanel.setBounds(0, 0, 170, FRAME_HEIGHT);
+        pagePanel.setBackground(Color.PINK);
         pagePanel.setLayout(null);
         learn = new JButton("背单词");
-        learn.setBounds(pageMarginWidth, pageMarginHeight, pageButtonSize, pageButtonSize);
-        learn.addActionListener(e -> Frame.homePage.setVisible(false));
+        learn.setBounds(35, 40, 100, 100);
+        learn.addActionListener(e -> {
+            Frame.homePage.setVisible(false);
+            Frame.reciteword.setVisible(true);
+        });
         setting = new JButton("我的");
-        setting.setBounds(pageMarginWidth, pageMarginHeight+pageSpace, pageButtonSize, pageButtonSize);
+        setting.setBounds(35, 220, 100, 100);
         setting.addActionListener(e -> {
             Frame.homePage.setVisible(false);
-
             Frame.settingPage.setVisible(true);
         });
         graph = new JButton("记忆曲线");
-        graph.setBounds(pageMarginWidth, pageMarginHeight+2*pageSpace, pageButtonSize, pageButtonSize);
+        graph.setBounds(35, 400, 100, 100);
         graph.addActionListener(e -> {
             Frame.homePage.setVisible(false);
-
             Frame.chartPage.setVisible(true);
         });
         pagePanel.add(learn);
@@ -93,17 +103,18 @@ class HomePage extends JPanel {
 
 
         bookPanel = new JPanel();
-        bookPanel.setBounds(FRAME_WIDTH*2/10, 0, FRAME_WIDTH*8/10, FRAME_HEIGHT);
+        bookPanel.setBounds(190, 0, 610, FRAME_HEIGHT);
+//        bookPanel.setBackground(Color.CYAN);
         //bookPanel.setLayout(new FlowLayout()); // 使用FlowLayout作为示例，可以根据需要更改布局管理器
         bookPanel.setLayout(null);
         JButton book1 = new JButton("词书1");
-        book1.setBounds(bookMarginWidth, bookMarginHeight, bookButtonWidth, bookButtonHeight);
+        book1.setBounds(30, 50, 200, 150);
         JButton book2 = new JButton("词书2");
-        book2.setBounds(bookMarginWidth + bookSpaceHorizontal, bookMarginHeight, bookButtonWidth, bookButtonHeight);
+        book2.setBounds(340, 50, 200, 150);
         JButton book3 = new JButton("词书3");
-        book3.setBounds(bookMarginWidth, bookMarginHeight + bookSpaceVertical, bookButtonWidth, bookButtonHeight);
+        book3.setBounds(30, 320, 200, 150);
         JButton setBook = new JButton("修改词书");
-        setBook.setBounds(bookMarginWidth + bookSpaceHorizontal, bookMarginHeight + bookSpaceVertical, bookButtonWidth, bookButtonHeight);
+        setBook.setBounds(340, 320, 200, 150);
         bookPanel.add(book1);
         bookPanel.add(book2);
         bookPanel.add(book3);
@@ -118,31 +129,24 @@ class SettingPage extends JPanel {
     JPanel pagePanel, informationPanel;
     JLabel head, username, userInfo;
     JCalendar calendar;
-    int headX = 200, headY = 100;
-    int headWidth = 200, headHeight = 200;
-    int usernameX = 200, usernameY = 320;
-    int usernameWidth = 200, usernameHeight = 40;
-    int userInfoX = 170, userInfoY = 400;
-    int userInfoWidth = 260, userInfoHeight = 300;
-    int calendarX = 450, calendarY = 150;
-    int calendarWidth = 700, calendarHeight = 600;
     public void launchPanel(){
         this.setLayout(null);
         this.setBounds(0,0,FRAME_WIDTH,FRAME_HEIGHT);
         this.setVisible(false);
         pagePanel = new JPanel();
-        pagePanel.setBounds(0, 0, FRAME_WIDTH*2/10, FRAME_HEIGHT);
+        pagePanel.setBounds(0, 0, 170, FRAME_HEIGHT);
+        pagePanel.setBackground(Color.PINK);
         pagePanel.setLayout(null);
         back = new JButton("返回");
-        back.setBounds(pageMarginWidth, pageMarginHeight, pageButtonSize, pageButtonSize);
+        back.setBounds(35, 40, 100, 100);
         back.addActionListener(e -> {
             Frame.settingPage.setVisible(false);
             Frame.homePage.setVisible(true);
         });
         information = new JButton("资料");
-        information.setBounds(pageMarginWidth, pageMarginHeight+pageSpace, pageButtonSize, pageButtonSize);
+        information.setBounds(35, 220, 100, 100);
         star = new JButton("收藏单词");
-        star.setBounds(pageMarginWidth, pageMarginHeight+2*pageSpace, pageButtonSize, pageButtonSize);
+        star.setBounds(35, 400, 100, 100);
         star.addActionListener(e -> {
             Frame.settingPage.setVisible(false);
             Frame.starPage.setVisible(true);
@@ -153,31 +157,31 @@ class SettingPage extends JPanel {
         this.add(pagePanel);
 
         informationPanel = new JPanel();
-        informationPanel.setBounds(FRAME_WIDTH*2/10, 0, FRAME_WIDTH*8/10, FRAME_HEIGHT);
+        informationPanel.setBounds(190, 0, 610, FRAME_HEIGHT);
         informationPanel.setLayout(null);
         //头像
         head = new JLabel();
-        head.setBounds(headX, headY, headWidth, headHeight);
+        head.setBounds(30, 50, 130, 160);
         head.setText("头像");
         head.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         informationPanel.add(head);
         //用户名
         username = new JLabel();
-        username.setBounds(usernameX, usernameY, usernameWidth, usernameHeight);
+        username.setBounds(60, 200, 100, 100);
         username.setText("用户名");
         informationPanel.add(username);
         //信息
         userInfo = new JLabel();
-        userInfo.setBounds(userInfoX, userInfoY, userInfoWidth, userInfoHeight);
-        userInfo.setText("<html>手机   "+"00011110000"+"<br/><br/><br/>"+
-                        "邮箱   "+"123456@qq.com"+"<br/><br/><br/>"+
-                        "学习目标 "+"托福</html>");
+        userInfo.setBounds(15, 300, 160, 200);
+        userInfo.setText("<html>   手机   "+"00011110000"+"<br/><br/><br/>"+
+                        "   邮箱   "+"123456@qq.com"+"<br/><br/><br/>"+
+                        "   学习目标 "+"托福</html>");
         userInfo.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         informationPanel.add(userInfo);
 
-        //日历
+        //日历  ///////////////////////////替换为我写的日历
         calendar = new JCalendar();
-        calendar.setBounds(calendarX, calendarY, calendarWidth, calendarHeight);
+        calendar.setBounds(200, 50, 380, 500);
         informationPanel.add(calendar);
 
         this.add(informationPanel);
@@ -185,13 +189,14 @@ class SettingPage extends JPanel {
 }
 class ChartPage extends JPanel {
     JButton back;
+    JLabel heading;
     JPanel pagePanel, graphPanel;
     DefaultCategoryDataset dataset;
     JFreeChart lineChart;
     ChartPanel chartPanel;
     JCheckBox[] checkBoxes;
-    String[] lines = {"词书1", "词书2", "词书3"};
-    String[] axisX = {"5月26日", "5月27日", "5月28日", "5月29日", "5月30日", "5月31日"};
+    String[] lines = {"book1", "book2", "book3"};
+    String[] axisX = {"5.26", "5.27", "5.28", "5.29", "5.30", "5.31"};
     int chartX = 100, chartY = 150;
     int chartWidth = 900, chartHeight = 650;
     int checkBoxX = 470, checkBoxY = 100;
@@ -201,19 +206,28 @@ class ChartPage extends JPanel {
         this.setBounds(0,0,FRAME_WIDTH,FRAME_HEIGHT);
         this.setVisible(false);
         pagePanel = new JPanel();
-        pagePanel.setBounds(0, 0, FRAME_WIDTH*2/10, FRAME_HEIGHT);
+        pagePanel.setBounds(0, 0, FRAME_WIDTH, FRAME_HEIGHT*1/10);
+        pagePanel.setBackground(Color.PINK);
         pagePanel.setLayout(null);
         back = new JButton("返回");
-        back.setBounds(pageMarginWidth, pageMarginHeight, pageButtonSize, pageButtonSize);
+        back.setBounds(10, 5,80,50);
         back.addActionListener(e -> {
-            Frame.settingPage.setVisible(false);
+            Frame.chartPage.setVisible(false);
             Frame.homePage.setVisible(true);
         });
         pagePanel.add(back);
+
+        heading = new JLabel("今日单词");
+        heading.setLocation(FRAME_WIDTH/2-40, 5);
+        heading.setSize(150,50);
+        heading.setForeground(Color.BLACK);
+        heading.setFont(new Font("TimesRoman", Font.BOLD, 30));
+        pagePanel.add(heading);
         this.add(pagePanel);
 
         graphPanel = new JPanel();
-        graphPanel.setBounds(FRAME_WIDTH*2/10, 0, FRAME_WIDTH*8/10, FRAME_HEIGHT);
+        graphPanel.setBounds(FRAME_WIDTH/8, FRAME_HEIGHT/6, FRAME_WIDTH*3/4, FRAME_HEIGHT*2/3+55);
+        graphPanel.setBackground(Color.PINK);
         graphPanel.setLayout(null);
         dataset = new DefaultCategoryDataset();
         for (String lineName : lines) {
@@ -223,9 +237,9 @@ class ChartPage extends JPanel {
         }
 
         lineChart = ChartFactory.createLineChart(
-                "记忆曲线",
-                "日期",
-                "记忆率",
+                "Memmory Curve",
+                "date",
+                "rate",
                 dataset,
                 PlotOrientation.VERTICAL,
                 true,
@@ -233,16 +247,23 @@ class ChartPage extends JPanel {
                 false
         );
         chartPanel = new ChartPanel(lineChart);
-        chartPanel.setBounds(chartX, chartY, chartWidth, chartHeight);
+        chartPanel.setBounds(22, 13, FRAME_WIDTH*4/6+20, FRAME_HEIGHT*2/3);
+        chartPanel.setBackground(Color.pink);
+//        chartPanel.setVisible(false);
+        lineChart.setBackgroundPaint(Color.white);
         graphPanel.add(chartPanel);
 
         checkBoxes = new JCheckBox[lines.length];
         JPanel checkBoxPanel = new JPanel();
-        checkBoxPanel.setBounds(checkBoxX, checkBoxY, checkBoxWidth, checkBoxHeight);
+        checkBoxPanel.setBounds(200, FRAME_WIDTH/3+146, 200, 40);
+        checkBoxPanel.setBackground(Color.PINK);
         //checkBoxPanel.setBounds(chartX, chartY-checkBoxHeight, chartWidth, checkBoxHeight);
         checkBoxPanel.setLayout(new BoxLayout(checkBoxPanel, BoxLayout.X_AXIS));
         for (int i = 0; i < checkBoxes.length; i++) {
             checkBoxes[i] = new JCheckBox(lines[i], true);
+            checkBoxes[i].setForeground(Color.black); // 设置文字颜色为红色
+            checkBoxes[i].setBackground(Color.pink); // 设置背景颜色为黄色
+            checkBoxes[i].setOpaque(true); // 设置为不透明
             checkBoxes[i].addItemListener(e -> updateChart());
             checkBoxPanel.add(checkBoxes[i]);
         }
@@ -264,9 +285,9 @@ class ChartPage extends JPanel {
             }
         }
         lineChart = ChartFactory.createLineChart(
-                "Sample Line Chart",
-                "Month",
-                "Value",
+                "Memmory Curve",
+                "date",
+                "rate",
                 updatedDataset,
                 PlotOrientation.VERTICAL,
                 true,
@@ -282,29 +303,28 @@ class StarPage extends JPanel {
     JButton back, information, star;
     JPanel pagePanel, wordPanel;
     WordManagerPanel wordManagerPanel;
-    int wordPanelX = 200, wordPanelY = 200;
-    int wordPanelWidth = 800, wordPanelHeight = 800;
     public void launchPanel(){
         this.setLayout(null);
         this.setBounds(0,0,FRAME_WIDTH,FRAME_HEIGHT);
         this.setVisible(false);
         pagePanel = new JPanel();
-        pagePanel.setBounds(0, 0, FRAME_WIDTH*2/10, FRAME_HEIGHT);
+        pagePanel.setBounds(0, 0, 170, FRAME_HEIGHT);
+        pagePanel.setBackground(Color.PINK);
         pagePanel.setLayout(null);
         back = new JButton("返回");
-        back.setBounds(pageMarginWidth, pageMarginHeight, pageButtonSize, pageButtonSize);
+        back.setBounds(35, 40, 100, 100);
         back.addActionListener(e -> {
             Frame.starPage.setVisible(false);
             Frame.homePage.setVisible(true);
         });
         information = new JButton("资料");
-        information.setBounds(pageMarginWidth, pageMarginHeight+pageSpace, pageButtonSize, pageButtonSize);
+        information.setBounds(35, 220, 100, 100);
         information.addActionListener(e -> {
             Frame.starPage.setVisible(false);
             Frame.settingPage.setVisible(true);
         });
         star = new JButton("收藏单词");
-        star.setBounds(pageMarginWidth, pageMarginHeight+2*pageSpace, pageButtonSize, pageButtonSize);
+        star.setBounds(35, 400, 100, 100);
 
         pagePanel.add(back);
         pagePanel.add(information);
@@ -313,11 +333,12 @@ class StarPage extends JPanel {
 
 
         wordPanel = new JPanel();
-        wordPanel.setBounds(FRAME_WIDTH*2/10, 0, FRAME_WIDTH*8/10, FRAME_HEIGHT);
+        wordPanel.setBounds(195, 20, 570, FRAME_HEIGHT-80);
+        wordPanel.setBackground(Color.PINK);
         //bookPanel.setLayout(new FlowLayout()); // 使用FlowLayout作为示例，可以根据需要更改布局管理器
         wordPanel.setLayout(null);
         wordManagerPanel = new WordManagerPanel();
-        wordManagerPanel.setBounds(wordPanelX, wordPanelY, wordPanelWidth, wordPanelHeight);
+        wordManagerPanel.setBounds(20, 40, 520, FRAME_HEIGHT-150);
         wordPanel.add(wordManagerPanel);
         this.add(wordPanel);
 
@@ -330,6 +351,7 @@ class WordManagerPanel extends JPanel {
     CheckBoxEditor checkBoxEditor;
 
     public WordManagerPanel() {
+        this.setBackground(Color.pink);
         // 初始化表格模型
         String[] columnNames = {"选择", "单词", "意义", "词书"};
         model = new DefaultTableModel(columnNames, 0) {
@@ -338,9 +360,11 @@ class WordManagerPanel extends JPanel {
                 return columnIndex == 0 ? Boolean.class : String.class;
             }
         };
+
         // 创建复选框渲染器和编辑器
         checkBoxRenderer = new CheckBoxRenderer();
         checkBoxEditor = new CheckBoxEditor();
+
         // 创建表格
         table = new JTable(model) {
             @Override
@@ -350,6 +374,7 @@ class WordManagerPanel extends JPanel {
                 }
                 return super.getCellEditor(row, column);
             }
+
             @Override
             public TableCellRenderer getCellRenderer(int row, int column) {
                 if (column == 0) {
@@ -358,6 +383,8 @@ class WordManagerPanel extends JPanel {
                 return super.getCellRenderer(row, column);
             }
         };
+        table.setBackground(Color.pink);
+
         // 添加数据到表格
         for (int i = 0; i < 5; i++) {
             Vector<Object> rowData = new Vector<>();
@@ -367,11 +394,11 @@ class WordManagerPanel extends JPanel {
             rowData.add("词书" + (i + 1)); // 添加词书数据
             model.addRow(rowData);
         }
+
         // 设置复选框列的宽度
         TableColumn checkBoxColumn = table.getColumnModel().getColumn(0);
         checkBoxColumn.setPreferredWidth(30);
         checkBoxColumn.setMaxWidth(30);
-
 
         // 添加表格到面板
         JScrollPane scrollPane = new JScrollPane(table);
@@ -382,14 +409,18 @@ class WordManagerPanel extends JPanel {
     static class CheckBoxRenderer extends JCheckBox implements TableCellRenderer {
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             setSelected((Boolean) value);
+            setBackground(isSelected ? Color.white: Color.pink); // 根据是否选中设置不同的背景颜色
             return this;
         }
     }
+
     // 自定义复选框编辑器
     static class CheckBoxEditor extends DefaultCellEditor {
         public CheckBoxEditor() {
             super(new JCheckBox());
+            ((JCheckBox) editorComponent).setBackground(Color.pink);  // 设置编辑器的背景颜色
         }
+
         @Override
         public Object getCellEditorValue() {
             return ((JCheckBox)editorComponent).isSelected();
