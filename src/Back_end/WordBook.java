@@ -89,32 +89,33 @@ public class WordBook {
     }
 
     public void Generate_Word_Groups() {
-        int grp=1,tot=0,ingroup=0;
+        int grp = 1, tot = 0, ingroup = 0;
         WordGroup wg = new WordGroup();
         int[] num = new int[10];
-        while (tot<words.size()) {
+        while (tot < words.size()) {
             Word wd = words.get(tot);
-            num[ingroup]=wd.getId();
+            num[ingroup] = wd.getId();
             tot++;
             ingroup++;
-            if (ingroup==10) {
+            if (ingroup == 10) {
                 wg.setContain(num);
                 wg.setGroupNum(grp);
                 wordGroups.add(wg);
                 wg = new WordGroup();
                 grp++;
-                ingroup=0;
+                ingroup = 0;
             }
         }
-        for (int i=ingroup;i<10;i++) num[i]=0;
+        for (int i = ingroup; i < 10; i++) num[i] = 0;
         wg.setContain(num);
         wg.setGroupNum(grp);
         wordGroups.add(wg);
     }
+
     public void saveWordsToFile() throws IOException {
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(this.fileLocation)));
         writer.write("WordList:\n");
-        for (Word word: words) {
+        for (Word word : words) {
             writer.write(word.toString());
         }
         writer.flush();
@@ -133,13 +134,14 @@ public class WordBook {
         wg.sort(new Comparator<WordGroup>() {
             @Override
             public int compare(WordGroup o1, WordGroup o2) {
-                double E1=o1.getCurve().getE(),E2=o2.getCurve().getE();
-                if (E1<=E2) return 1;
+                double E1 = o1.getCurve().getE(), E2 = o2.getCurve().getE();
+                if (E1 <= E2) return 1;
                 return -1;
             }
         });
         return wg.get(0);
     }
+
     public File getFileLocation() {
         return fileLocation;
     }
