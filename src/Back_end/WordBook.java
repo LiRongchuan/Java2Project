@@ -6,181 +6,154 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class WordBook {
-    private File fileLocation;
-    private List<Word> words;
-    private List<WordGroup> wordGroups;
-    private Map<String, String> metadata;
 
 
-    public WordBook(File fileLocation) {
-        this.fileLocation = fileLocation;
-        this.words = new ArrayList<>();
-        this.wordGroups = new ArrayList<>();
-        this.metadata = new HashMap<>();
-    }
-
-    //读取词书文件
-    public void loadWordFromFile() throws IOException {
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileLocation))) {
+    //从词书列表里找出所有的词书名字
+    public static List<String> filePath(String filename) throws IOException {
+        List<String> all = new ArrayList<>();
+//        String path = "";
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))){
             String line;
-            boolean isWordList = false;
-            boolean isWordGroups = false;
-            boolean isMetadata = false;
-
             while ((line = reader.readLine()) != null) {
-                if (line.startsWith("#")) {
-                    // 注释，comment：注意，仅仅可以识别在每一行开头的#的注释，不能放在中间，也不要打空格
-                    continue;
-                }
-                if (line.startsWith("WordList:")) {
-                    isWordList = true;
-                    isWordGroups = false;
-                    isMetadata = false;
-                    continue;
-                } else if (line.startsWith("WordGroups:")) {
-                    isWordList = false;
-                    isWordGroups = true;
-                    isMetadata = false;
-                    continue;
-                } else if (line.startsWith("Metadata:")) {
-                    isWordList = false;
-                    isWordGroups = false;
-                    isMetadata = true;
-                    continue;
-                }
+                String[] parts = line.split(",");
+                all.add(parts[0]);
+//                if (parts[0].equals(filename)) {
+//                    path = parts[1];
+//                }
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();  // 处理异常，打印错误轨迹
+        }
+//        all.add(path);
+        return all;
+    }
 
-                if (isWordList) {
-                    String[] parts = line.split(",");
-                    int id = Integer.parseInt(parts[0]);
-                    String english = parts[1];
-                    String chinese = parts[2];
-                    boolean liked = Boolean.parseBoolean(parts[3]);
-                    String[] choices = new String[4];
-                    for (int i = 4; i < parts.length - 1; i++) {
-                        choices[i - 4] = parts[i];
-                    }
-                    int correct_option = Integer.parseInt(parts[8]);
-                    Word word = new Word(id, english, chinese, liked,
-                            choices, correct_option);
-                    words.add(word);
-                } else if (isWordGroups) {
-                    String[] parts = line.split(",");
-                    int groupNum = Integer.parseInt(parts[0]);
-                    int[] contain = new int[10];
-                    for (int i = 1; i <= 10; i++) {
-                        contain[i - 1] = Integer.parseInt(parts[i]);
-                    }
-                    int last_number_of_correctness = Integer.parseInt(parts[11]);
-                    // Note: we use milliseconds format
-                    long milliseconds = Long.parseLong(parts[12]);
-                    Timestamp next_review_time = new Timestamp(milliseconds);
-                    double s = Double.parseDouble(parts[13]);
-                    int full_mark_in_a_row = Integer.parseInt(parts[14]);
-                    boolean need_to_review = Boolean.parseBoolean(parts[15]);
-                    WordGroup wordGroup = new WordGroup(groupNum, contain,
-                            last_number_of_correctness, next_review_time, s,
-                            full_mark_in_a_row, need_to_review);
-                } else if (isMetadata) {
-                    //todo: if there is other data needed to store in the files
-                    String[] parts = line.split(":");
-                    metadata.put(parts[0], parts[1]);
+    //根据对应的名字找出对应的路径
+    public static String findPath(String booklistPath, String filename) throws IOException {
+//        List<String> all = new ArrayList<>();
+        String path = "";
+        try (BufferedReader reader = new BufferedReader(new FileReader(booklistPath))){
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+//                all.add(parts[0]);
+                if (parts[0].equals(filename)) {
+                    path = parts[1];
                 }
             }
         }
-    }
-
-    //选择具有最低记忆成都(E值)的词组来进行词书背诵
-    public void Generate_Word_Groups() {
-        int grp = 1, tot = 0, ingroup = 0;
-        WordGroup wg = new WordGroup();
-        int[] num = new int[10];
-        while (tot < words.size()) {
-            Word wd = words.get(tot);
-            num[ingroup] = wd.getId();
-            tot++;
-            ingroup++;
-            if (ingroup == 10) {
-                wg.setContain(num);
-                wg.setGroupNum(grp);
-                wordGroups.add(wg);
-                wg = new WordGroup();
-                grp++;
-                ingroup = 0;
-            }
+        catch (IOException e) {
+            e.printStackTrace();  // 处理异常，打印错误轨迹
         }
-        for (int i = ingroup; i < 10; i++) num[i] = 0;
-        wg.setContain(num);
-        wg.setGroupNum(grp);
-        wordGroups.add(wg);
+//        all.add(path);
+        return path;
     }
 
-    //存入词书
-    public void saveWordsToFile() throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(this.fileLocation)))) {
-            writer.write("WordList:\n");
-            for (Word word : words) {
-                writer.write(word.toString());
+    //生成今天的背诵单词  20个new word 10个wrong word
+    public static List<String[]> todayRecite(int start, String originFile, String wrongFile) throws IOException {
+//        String[][] wordlist = new String[30][8];
+        int end = start + 20;
+        List<String[]> wordlist = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(originFile));
+             BufferedReader reader2 = new BufferedReader(new FileReader(wrongFile))){
+            String line;
+//            int pointer = 0;
+
+            //1,banana,[bə'nɑːnə],n.香蕉,香蕉,橘子,西瓜,苹果,香蕉
+            //new word
+            while ((line = reader.readLine()) != null) {
+                String[] word = new String[8];
+                String[] parts = line.split(",");
+                int id = Integer.parseInt(parts[0]);
+                if(id >= start && id < end){
+                    word[0] = parts[1];//eng
+                    word[1] = parts[2];//wordsound
+                    word[2] = parts[3];//meaing
+                    word[3] = parts[4];//a
+                    word[4] = parts[5];//b
+                    word[5] = parts[6];//c
+                    word[6] = parts[7];//d
+                    word[7] = parts[8];//ans
+                    wordlist.add(word);
+                }else if(id >= end){
+                    break;
+                }
             }
+
+            //wrong file
+            while ((line = reader2.readLine()) != null) {
+                String[] word = new String[8];
+                String[] parts = line.split(",");
+//                int id = Integer.parseInt(parts[0]);
+                word[0] = parts[0];//eng
+                word[1] = parts[1];//wordsound
+                word[2] = parts[2];//meaing
+                word[3] = parts[3];//a
+                word[4] = parts[4];//b
+                word[5] = parts[5];//c
+                word[6] = parts[6];//d
+                word[7] = parts[7];//ans
+                wordlist.add(word);
+            }
+
+
+        }
+        catch (IOException e) {
+            e.printStackTrace();  // 处理异常，打印错误轨迹
+        }
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(wrongFile))){
+            //清空wrong.txt
+            writer.write("");
             writer.flush();
-            writer.write("WordGroups:\n");
-            for (WordGroup wordGroup : wordGroups) {
-                writer.write(wordGroup.toString());
+            writer.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();  // 处理异常，打印错误轨迹
+        }
+
+        return wordlist;
+    }
+
+    public static int pre_record(String name) throws IOException {
+        int newid = 0;
+        try (BufferedReader reader = new BufferedReader(new FileReader("record.txt"))){
+            String line = "";
+//            String last_line = "";
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if(parts[0].equals(name)){
+                    newid = Integer.parseInt(parts[1]);
+                }
             }
-            writer.flush();
-            writer.write("Metadata:\n");
-            for (String key: metadata.keySet()) {
-                writer.write(key+":"+ metadata.get(key)+"\n");
-            }
-            writer.flush();
+        }
+        catch (IOException e) {
+            e.printStackTrace();  // 处理异常，打印错误轨迹
+        }
+        return newid;
+    }
+
+    //record : 每日背诵记录new中 + wrong中
+    //背到哪里了
+    public static void record(String name, int id) throws IOException {
+        int newid = 0;
+        int wrongid = 0;
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("record.txt", true))){
+            writer.write(name + "," + id + "\n");
+        }
+        catch (IOException e) {
+            e.printStackTrace();  // 处理异常，打印错误轨迹
         }
     }
 
-    public WordGroup Get_Word_Groups_To_Memory() {
-        ArrayList<WordGroup> wg = new ArrayList<>();
-        for (WordGroup wordGroup : wordGroups) {
-            if (wordGroup.isNeed_to_Review()) wg.add(wordGroup);
+    //word.getText(), wordSound.getText(), meaning.getText(), a.getText(), b.getText(), c.getText(), d.getText(), ans
+    public static void wrong(String word, String wordSound, String meaning, String a,String b, String c, String d, String ans) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("wrong.txt", true))){
+            writer.write(word+","+ wordSound+","+meaning+","+a+","+b+","+c+","+d+","+ans + "\n");
         }
-        wg.sort(new Comparator<WordGroup>() {
-            @Override
-            public int compare(WordGroup o1, WordGroup o2) {
-                double E1 = o1.getCurve().getE(), E2 = o2.getCurve().getE();
-                if (E1 <= E2) return -1;
-                return 1;
-            }
-        });
-        return wg.get(0);
-    }
-
-    public File getFileLocation() {
-        return fileLocation;
-    }
-
-    public void setFileLocation(File fileLocation) {
-        this.fileLocation = fileLocation;
-    }
-
-    public List<Word> getWords() {
-        return words;
-    }
-
-    public void setWords(List<Word> words) {
-        this.words = words;
-    }
-
-    public List<WordGroup> getWordGroups() {
-        return wordGroups;
-    }
-
-    public void setWordGroups(List<WordGroup> wordGroups) {
-        this.wordGroups = wordGroups;
-    }
-
-    public void Update_WordGroup(WordGroup wordGroup) {
-        for (int i = 0; i < wordGroups.size(); i++) {
-            if (wordGroups.get(i).getGroupNum() == wordGroup.getGroupNum()) {
-                wordGroups.set(i, wordGroup);
-                return;
-            }
+        catch (IOException e) {
+            e.printStackTrace();  // 处理异常，打印错误轨迹
         }
     }
+
 }
