@@ -41,7 +41,7 @@ public class WordGroup {
     public Timestamp Calculate_Next_Review_Time(int R, Timestamp T) {
         Timestamp retT = T;
         //todo:
-        double delta = Math.log(E_threshold)*S/Math.log((double) getLast_Number_of_Correctness()/10);
+        double delta = Math.log(E_threshold)*S;
         retT = new Timestamp(T.getTime()+(long) (delta*1000*60*60*24));
         return retT;
     }

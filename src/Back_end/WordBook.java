@@ -5,10 +5,13 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static Back_end.WordList.*;
+
 public class WordBook {
     private File fileLocation;
     private List<Word> words;
     private List<WordGroup> wordGroups;
+
     private Map<String, String> metadata;
 
 
@@ -135,8 +138,8 @@ public class WordBook {
             @Override
             public int compare(WordGroup o1, WordGroup o2) {
                 double E1 = o1.getCurve().getE(), E2 = o2.getCurve().getE();
-                if (E1 <= E2) return 1;
-                return -1;
+                if (E1 <= E2) return -1;
+                return 1;
             }
         });
         return wg.get(0);
@@ -164,5 +167,14 @@ public class WordBook {
 
     public void setWordGroups(List<WordGroup> wordGroups) {
         this.wordGroups = wordGroups;
+    }
+
+    public void Update_WordGroup(WordGroup wordGroup) {
+        for (int i = 0; i < wordGroups.size(); i++) {
+            if (wordGroups.get(i).getGroupNum() == wordGroup.getGroupNum()) {
+                wordGroups.set(i, wordGroup);
+                return;
+            }
+        }
     }
 }
