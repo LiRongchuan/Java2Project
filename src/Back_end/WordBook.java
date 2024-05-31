@@ -5,13 +5,10 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static Back_end.WordList.*;
-
 public class WordBook {
     private File fileLocation;
     private List<Word> words;
     private List<WordGroup> wordGroups;
-
     private Map<String, String> metadata;
 
 
@@ -119,17 +116,23 @@ public class WordBook {
 
     //存入词书
     public void saveWordsToFile() throws IOException {
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(this.fileLocation)));
-        writer.write("WordList:\n");
-        for (Word word : words) {
-            writer.write(word.toString());
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(this.fileLocation)))) {
+            writer.write("WordList:\n");
+            for (Word word : words) {
+                writer.write(word.toString());
+            }
+            writer.flush();
+            writer.write("WordGroups:\n");
+            for (WordGroup wordGroup : wordGroups) {
+                writer.write(wordGroup.toString());
+            }
+            writer.flush();
+            writer.write("Metadata:\n");
+            for (String key: metadata.keySet()) {
+                writer.write(key+":"+ metadata.get(key)+"\n");
+            }
+            writer.flush();
         }
-        writer.flush();
-        writer.write("WordGroups\n");
-        for (WordGroup wordGroup : wordGroups) {
-            writer.write(wordGroup.toString());
-        }
-        writer.flush();
     }
 
     public WordGroup Get_Word_Groups_To_Memory() {
