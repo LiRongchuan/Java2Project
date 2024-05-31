@@ -8,6 +8,7 @@ import java.util.Map;
 public class WordList {
     private Map<Integer, Word> wordlist = new HashMap<>();
 
+
     public void Add_Word(Integer number, Word NewWord) {
         wordlist.put(number, NewWord);
     }
