@@ -331,7 +331,7 @@ class ChartPage extends JPanel {
             if (checkBoxes[i].isSelected()) {
                 for (Date datum : axisX) {
                     updatedDataset.addValue(
-                            dataset.getValue(lines[i], datum.getMonth()+"."+datum.getDate()),
+                            dataset.getValue(lines[i], (datum.getMonth()+1)+"."+datum.getDate()),
                             lines[i],
                             (datum.getMonth()+1)+"."+datum.getDate()
                     );
