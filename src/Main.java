@@ -12,7 +12,8 @@ import java.util.ArrayList;
 public class Main {
     public static Timestamp systemTime; // 模拟系统时间，人为跳转时间，方便演示
     public static ArrayList<WordBook> WordBooks = new ArrayList<>();
-    public static WordList wordList_Global = new WordList();
+    // public static WordList wordList_Global = new WordList();
+    public static WordList wordList_Global;
     public static void main(String[] args) throws IOException {
         /**/
         Index index = new Index();
@@ -21,6 +22,7 @@ public class Main {
             File file = new File(ind);
             WordBook wb = new WordBook(file);
             WordBooks.add(wb);
+            wordList_Global = new WordList(file);
             wordList_Global.AddBook(wb);
         }
         /**/

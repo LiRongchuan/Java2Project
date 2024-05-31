@@ -5,21 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e75b8209-fd3c-432c-957e-2b066b66258d" name="更改" comment="更改">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Back_end/Index.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Back_end/Index.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Back_end/Word.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Back_end/Word.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Back_end/WordBook.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Back_end/WordBook.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Back_end/WordGroup.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Back_end/WordGroup.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Back_end/WordList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Back_end/WordList.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Java2Project.iml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UIDesign/Frame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UIDesign/Frame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UIDesign/Reciteword.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UIDesign/Reciteword.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UIDesign/Util.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UIDesign/Util.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
