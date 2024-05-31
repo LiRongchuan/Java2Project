@@ -41,6 +41,8 @@ public class WordGroup {
     public Timestamp Calculate_Next_Review_Time(int R, Timestamp T) {
         Timestamp retT = T;
         //todo:
+        double delta = Math.log(E_threshold)*S/Math.log((double) getLast_Number_of_Correctness()/10);
+        retT = new Timestamp(T.getTime()+(long) (delta*1000*60*60*24));
         return retT;
     }
 
@@ -109,6 +111,7 @@ public class WordGroup {
         if (Mark == 10) Full_Mark_in_a_Row++;
         else Full_Mark_in_a_Row = 0;
         if (Full_Mark_in_a_Row == 3) Need_to_Review = false;
+        Next_Review_Time = Calculate_Next_Review_Time(Mark, Review_Time);
     }
 
     @Override

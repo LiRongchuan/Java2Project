@@ -5,8 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e75b8209-fd3c-432c-957e-2b066b66258d" name="更改" comment="更改">
-      <change beforePath="$PROJECT_DIR$/src/Back_end/Word.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Back_end/Word.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Back_end/WordBook.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Back_end/WordBook.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Back_end/WordGroup.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Back_end/WordGroup.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -119,7 +117,14 @@
       <option name="project" value="LOCAL" />
       <updated>1717145407013</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="更改">
+      <created>1717146719652</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1717146719652</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
