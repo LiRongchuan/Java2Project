@@ -107,13 +107,13 @@ public class WordList {
         }
     }
 
-
+    /*
     public void AddBook(WordBook wordBook) {
         List<Word> words = wordBook.getWords();
         for (Word wd : words) {
             if (Search_If_Is_Existed(wd.getId())) Add_Word(wd.getId(), wd);
         }
     }
-
+    */
 
 }

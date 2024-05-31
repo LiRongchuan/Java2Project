@@ -1,47 +1,58 @@
 package Back_end;
 
-public class User {
-    private String id;
-    private String nickname;
-    private String phone_number;
-    private String email;
+import java.io.File;
+import java.io.IOException;
+import java.util.Scanner;
 
-    public User(String id, String nickname, String phone_number, String email) {
+public class User {
+    private final String id;
+    private final String nickname;
+    private final String phone_number;
+    private final String email;
+
+    private final String goal;
+
+    public User(String id, String nickname, String phone_number, String email, String goal) {
         this.id = id;
         this.nickname = nickname;
         this.phone_number = phone_number;
         this.email = email;
+        this.goal = goal;
+    }
+    public static User loadUserInfo() throws IOException {
+        String fileName = "user.txt";
+        File file = new File(fileName);
+        Scanner scanner;
+        if (!file.exists()) {
+            file.createNewFile();
+        }
+        scanner = new Scanner(file);
+        String id, nickname, phone_number, email, goal;
+        id = scanner.nextLine();
+        nickname = scanner.nextLine();
+        phone_number = scanner.nextLine();
+        email = scanner.nextLine();
+        goal = scanner.nextLine();
+        return new User(id, nickname, phone_number, email, goal);
     }
 
-    public String getId() {
-        return id;
+    public String getGoal() {
+        return goal;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getNickname() {
         return nickname;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
 
     public String getPhone_number() {
         return phone_number;
     }
 
-    public void setPhone_number(String phone_number) {
-        this.phone_number = phone_number;
-    }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
 }

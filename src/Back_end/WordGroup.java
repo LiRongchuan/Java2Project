@@ -13,11 +13,9 @@ public class WordGroup {
     private boolean Need_to_Review;
     private final double E_threshold = 0.22524324;
 
-    private Curve curve;
 
     public WordGroup() {
         Need_to_Review = true;
-        curve = new Curve(0.0,0.3,1.0);
     }
 
     public WordGroup(int groupNum, int[] contain, int last_Number_of_Correctness,
@@ -30,7 +28,6 @@ public class WordGroup {
         S = s;
         Full_Mark_in_a_Row = full_Mark_in_a_Row;
         Need_to_Review = need_to_Review;
-        this.curve = new Curve((double) last_Number_of_Correctness / 10, s);
         //todo: 如何获取总体的时间？
     }
 
@@ -95,13 +92,6 @@ public class WordGroup {
     }
 
 
-    public Curve getCurve() {
-        return curve;
-    }
-
-    public void setCurve(Curve curve) {
-        this.curve = curve;
-    }
 
     public void Update_Mark(int Mark, Timestamp Review_Time) {
         Last_Number_of_Correctness = Mark;

@@ -1,5 +1,7 @@
 package UIDesign;
 
+import Back_end.Curve;
+import Back_end.User;
 import com.toedter.calendar.JCalendar;
 import org.jfree.chart.*;
 import org.jfree.chart.plot.PlotOrientation;
@@ -10,8 +12,14 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.sql.Date;
 import java.util.Vector;
 
 
@@ -115,6 +123,26 @@ class HomePage extends JPanel {
         book3.setBounds(30, 320, 200, 150);
         JButton setBook = new JButton("修改词书");
         setBook.setBounds(340, 320, 200, 150);
+        setBook.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setCurrentDirectory(new File("."));
+                fileChooser.setDialogTitle("Import File");
+                int returnVal = fileChooser.showOpenDialog(null);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    File selectBook = fileChooser.getSelectedFile();
+                    // 这里可以添加代码处理文件，例如读取文件内容等
+                    System.out.println("File to import: " + selectBook.getAbsolutePath());
+                    File newBook = new File("wordbook\\" + selectBook.getName());
+                    try {
+                        newBook.createNewFile();
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
+            }
+        });
         bookPanel.add(book1);
         bookPanel.add(book2);
         bookPanel.add(book3);
@@ -129,6 +157,7 @@ class SettingPage extends JPanel {
     JPanel pagePanel, informationPanel;
     JLabel head, username, userInfo;
     JCalendar calendar;
+    User user;
     public void launchPanel(){
         this.setLayout(null);
         this.setBounds(0,0,FRAME_WIDTH,FRAME_HEIGHT);
@@ -159,6 +188,12 @@ class SettingPage extends JPanel {
         informationPanel = new JPanel();
         informationPanel.setBounds(190, 0, 610, FRAME_HEIGHT);
         informationPanel.setLayout(null);
+        try {
+            user = User.loadUserInfo();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         //头像
         head = new JLabel();
         head.setBounds(30, 50, 130, 160);
@@ -168,14 +203,15 @@ class SettingPage extends JPanel {
         //用户名
         username = new JLabel();
         username.setBounds(60, 200, 100, 100);
-        username.setText("用户名");
+        username.setText(user.getNickname());
         informationPanel.add(username);
         //信息
         userInfo = new JLabel();
         userInfo.setBounds(15, 300, 160, 200);
-        userInfo.setText("<html>   手机   "+"00011110000"+"<br/><br/><br/>"+
-                        "   邮箱   "+"123456@qq.com"+"<br/><br/><br/>"+
-                        "   学习目标 "+"托福</html>");
+
+        userInfo.setText("<html>   手机   "+user.getPhone_number()+"<br/><br/><br/>"+
+                        "   邮箱   "+user.getEmail()+"<br/><br/><br/>"+
+                        "   学习目标 "+user.getGoal()+"</html>");
         userInfo.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         informationPanel.add(userInfo);
 
@@ -196,7 +232,10 @@ class ChartPage extends JPanel {
     ChartPanel chartPanel;
     JCheckBox[] checkBoxes;
     String[] lines = {"book1", "book2", "book3"};
-    String[] axisX = {"5.26", "5.27", "5.28", "5.29", "5.30", "5.31"};
+    Curve[] curves = new Curve[3];
+    double[] todayValues = {100, 90, 80};
+    ArrayList<Date> axisX = new ArrayList<>();
+    ArrayList<Double>[] values = new ArrayList[3];
     int chartX = 100, chartY = 150;
     int chartWidth = 900, chartHeight = 650;
     int checkBoxX = 470, checkBoxY = 100;
@@ -229,23 +268,38 @@ class ChartPage extends JPanel {
         graphPanel.setBounds(FRAME_WIDTH/8, FRAME_HEIGHT/6, FRAME_WIDTH*3/4, FRAME_HEIGHT*2/3+55);
         graphPanel.setBackground(Color.PINK);
         graphPanel.setLayout(null);
+
+        //////////////////////////////////////////////
+        // 在这里加今日正确率
         dataset = new DefaultCategoryDataset();
-        for (String lineName : lines) {
-            for (String datum : axisX) {
-                dataset.addValue(Math.random() * 100, lineName, datum);
+        for(int i=0;i<3;i++){
+            curves[i] = new Curve();
+            values[i] = new ArrayList<>();
+            try {
+                curves[i].loadCurveData(lines[i], todayValues[i]);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            if(axisX.isEmpty()){
+                axisX = curves[i].getDates();
+            }
+            values[i] = curves[i].getValues();
+            for(int j=0;j<axisX.size();j++){
+                dataset.addValue(values[i].get(j), lines[i], (axisX.get(j).getMonth()+1)+"."+axisX.get(j).getDate());
             }
         }
 
         lineChart = ChartFactory.createLineChart(
-                "Memmory Curve",
-                "date",
-                "rate",
+                "Memory Curve",
+                "Date",
+                "Memorability",
                 dataset,
                 PlotOrientation.VERTICAL,
                 true,
                 true,
                 false
         );
+
         chartPanel = new ChartPanel(lineChart);
         chartPanel.setBounds(22, 13, FRAME_WIDTH*4/6+20, FRAME_HEIGHT*2/3);
         chartPanel.setBackground(Color.pink);
@@ -275,19 +329,19 @@ class ChartPage extends JPanel {
         DefaultCategoryDataset updatedDataset = new DefaultCategoryDataset();
         for (int i = 0; i < checkBoxes.length; i++) {
             if (checkBoxes[i].isSelected()) {
-                for (String datum : axisX) {
+                for (Date datum : axisX) {
                     updatedDataset.addValue(
-                            dataset.getValue(lines[i], datum),
+                            dataset.getValue(lines[i], datum.getMonth()+"."+datum.getDate()),
                             lines[i],
-                            datum
+                            (datum.getMonth()+1)+"."+datum.getDate()
                     );
                 }
             }
         }
         lineChart = ChartFactory.createLineChart(
-                "Memmory Curve",
-                "date",
-                "rate",
+                "Memory Curve",
+                "Date",
+                "Memorability",
                 updatedDataset,
                 PlotOrientation.VERTICAL,
                 true,
