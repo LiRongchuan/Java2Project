@@ -1,9 +1,6 @@
 package Back_end;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +16,6 @@ public class WordList {
     private Map<String, String> metadata;
 
     private File fileLocation;
-
 
     public void Add_Word(Integer number, Word NewWord) {
         wordlist.put(number, NewWord);
@@ -107,13 +103,33 @@ public class WordList {
         }
     }
 
-    /*
+    //写入词典文件
+    public void saveWordsToFile() throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(this.fileLocation)))) {
+            Word[] words = new Word[wordlist.size()];
+            for (int key: wordlist.keySet()) {
+                words[key] = wordlist.get(key);
+            }
+            writer.write("WordList:\n");
+            for (Word word : words) {
+                writer.write(word.toString());
+            }
+            writer.flush();
+
+            writer.write("Metadata:\n");
+            for (String key: metadata.keySet()) {
+                writer.write(key+":"+ metadata.get(key)+"\n");
+            }
+            writer.flush();
+        }
+    }
+
     public void AddBook(WordBook wordBook) {
         List<Word> words = wordBook.getWords();
         for (Word wd : words) {
             if (Search_If_Is_Existed(wd.getId())) Add_Word(wd.getId(), wd);
         }
     }
-    */
+
 
 }
