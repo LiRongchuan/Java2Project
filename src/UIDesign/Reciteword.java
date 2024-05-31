@@ -3,22 +3,31 @@ import com.toedter.calendar.JCalendar;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
+//import static Back_end.WordBook;
+import static Back_end.WordBook.*;
 import static UIDesign.Util.*;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+
+import Back_end.WordBook;
 public class Reciteword extends JPanel {
     public static JButton back, a, b, c, d, collect, hint, next;
     public static JPanel headingPanel, mainPanel, recordPanel,selectBookPanel;
     public static JLabel heading, word, wordSound, meaning, success, select;
     public static String ans;
-    public static int pointer = 1;
+    public static int pointer;
+    public static boolean correct;
+    public static int startid;
+    public static String wrongFile = "wrong.txt";
     JCalendar calendar;
 
-    public void launchPanel(){
+    public void launchPanel() throws IOException {
         this.setLayout(null);
         this.setBounds(0,0,FRAME_WIDTH,FRAME_HEIGHT);
         this.setVisible(false);
@@ -66,25 +75,23 @@ public class Reciteword extends JPanel {
         JComboBox<String> comboBox = new JComboBox<>();
         comboBox.setBounds(main_x+80, main_y+40, 250, 50);
         comboBox.setBackground(Color.white);
-        comboBox.addItem("四级词汇");
-        comboBox.addItem("六级词汇");
-//        comboBox.setRenderer(new DefaultListCellRenderer() {
-//            @Override
-//            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-//                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-//                setText(value.toString());
-//                if (isSelected) {
-//                    setBackground(Color.LIGHT_GRAY);
-//                    setForeground(Color.BLUE);
-//                } else {
-//                    setBackground(Color.WHITE);
-//                    setForeground(Color.BLACK);
-//                }
-//                setFont(new Font("Arial", Font.BOLD, 14));
-//                return this;
-//            }
-//        });
+
+//        WordBook wordBook = new WordBook();
+        //所有文件名+当前想要的文件名的路径
+        List<String> files = filePath("BookList.txt");
+
+        for (int i = 0; i < files.size(); i++) {
+            comboBox.addItem(files.get(i));
+        }
+//        comboBox.addItem("四级词汇");
+//        comboBox.addItem("六级词汇");
+
+        //当前选择的词书的名字
+        String selectedbook = (String) comboBox.getSelectedItem();
+        //path是当前选择的词书的路径
+        String path = findPath("BookList.txt" ,selectedbook);
         selectBookPanel.add(comboBox);
+
 
         //开始背词 button
         JButton start = new JButton("开始");
@@ -106,8 +113,16 @@ public class Reciteword extends JPanel {
         mainPanel.setLayout(null);
         mainPanel.setVisible(false);
 
+
+        //拿到要用的今日背单词的数组 String[30][8]
+        startid = 0;
+        startid = pre_record(selectedbook);
+        List<String[]> today;
+        today = todayRecite(startid, path, wrongFile);
+
+
         //单词 label
-        String eng = "apple";
+        String eng = today.get(0)[0];
         word = new JLabel();
         word.setText(eng);
         word.setBounds(main_width/2-50, main_y/2-50, 250, 100);
@@ -115,7 +130,7 @@ public class Reciteword extends JPanel {
         mainPanel.add(word);
 
         //音标 label
-        String sound = "[æpl]";
+        String sound = today.get(0)[1];
         wordSound = new JLabel();
         wordSound.setText(sound);
         wordSound.setBounds(main_width/2-35, main_y/2-10, 180, 80);
@@ -146,7 +161,7 @@ public class Reciteword extends JPanel {
 
         //释义详情 label
         meaning = new JLabel();
-        String mean = "n. 苹果";
+        String mean = today.get(0)[2];
         meaning.setText(mean);
         meaning.setBounds(main_width/2-40, main_y/2+10, 250, 100);
         meaning.setVisible(false);
@@ -155,27 +170,29 @@ public class Reciteword extends JPanel {
 
         //4个选项 button
 //        AtomicReference<String> ans = new AtomicReference<>("苹果");
-        ans = "苹果";
+        ans = today.get(0)[7];
 
         a = new JButton();
-        String optionA = "苹果";
+        String optionA = today.get(0)[3];
         a.setText(optionA);
         a.setBounds(main_width/2-100, main_y/2+80+10, 200, 40);
         b = new JButton();
-        String optionB = "香蕉";
+        String optionB = today.get(0)[4];
         b.setText(optionB);
         b.setBounds(main_width/2-100, main_y/2+145+10, 200, 40);
         c = new JButton();
-        String optionC = "橘子";
+        String optionC = today.get(0)[5];
         c.setText(optionC);
         c.setBounds(main_width/2-100, main_y/2+145+65+10, 200, 40);
         d = new JButton();
-        String optionD = "西瓜";
+        String optionD = today.get(0)[6];
         d.setText(optionD);
         d.setBounds(main_width/2-100, main_y/2+145+65+65+10, 200, 40);
 
+//        correct = false;
         a.addActionListener(e -> {
             if(a.getText().equals(ans)){
+//                correct = true;
                 //正确
                 a.setBackground(Color.GREEN);
             }else{
@@ -188,12 +205,19 @@ public class Reciteword extends JPanel {
                 }else{
                     d.setBackground(Color.GREEN);
                 }
+                try {
+                    wrong(word.getText(), wordSound.getText(), meaning.getText(), a.getText(), b.getText(), c.getText(), d.getText(), ans);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+
             }
             meaning.setVisible(true);
         });
         b.addActionListener(e -> {
             if(b.getText().equals(ans)){
                 //正确
+                correct = true;
                 b.setBackground(Color.GREEN);
             }else{
                 //错误
@@ -205,12 +229,18 @@ public class Reciteword extends JPanel {
                 }else{
                     d.setBackground(Color.GREEN);
                 }
+                try {
+                    wrong(word.getText(), wordSound.getText(), meaning.getText(), a.getText(), b.getText(), c.getText(), d.getText(), ans);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
             meaning.setVisible(true);
         });
         c.addActionListener(e -> {
             if(c.getText().equals(ans)){
                 //正确
+                correct = true;
                 c.setBackground(Color.GREEN);
             }else{
                 //错误
@@ -222,12 +252,18 @@ public class Reciteword extends JPanel {
                 }else{
                     d.setBackground(Color.GREEN);
                 }
+                try {
+                    wrong(word.getText(), wordSound.getText(), meaning.getText(), a.getText(), b.getText(), c.getText(), d.getText(), ans);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
             meaning.setVisible(true);
         });
         d.addActionListener(e -> {
             if(d.getText().equals(ans)){
                 //正确
+                correct = true;
                 d.setBackground(Color.GREEN);
             }else{
                 //错误
@@ -239,9 +275,20 @@ public class Reciteword extends JPanel {
                 }else{
                     a.setBackground(Color.GREEN);
                 }
+                try {
+                    wrong(word.getText(), wordSound.getText(), meaning.getText(), a.getText(), b.getText(), c.getText(), d.getText(), ans);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
             meaning.setVisible(true);
         });
+
+        //wrong的话就加入wrong.txt
+        //banana,[bə'nɑːnə],n.香蕉,香蕉,橘子,西瓜,苹果,香蕉
+//        if(!correct){
+//            wrong(word.getText(), wordSound.getText(), meaning.getText(), a.getText(), b.getText(), c.getText(), d.getText(), ans);
+//        }
         a.setBackground(Color.white);
         b.setBackground(Color.white);
         c.setBackground(Color.white);
@@ -291,33 +338,25 @@ public class Reciteword extends JPanel {
 
         //arr中存储今天要学的单词
 
+        System.out.println(today.size());
         //TODO: 从词书txt中获取今天要学的单词
-        String[][] arr = new String[2][8];
-        arr[1][0] = "banana";//word
-        arr[1][1] = "[bə'nɑːnə]";//音标
-        arr[1][2] = "n. 香蕉";//meaning
-        arr[1][3] = "香蕉";//a
-        arr[1][4] = "橘子";//b
-        arr[1][5] = "西瓜";//c
-        arr[1][6] = "苹果";//d
-        arr[1][7] = "香蕉";//ans
-
+        pointer = 1;
         next.addActionListener(e -> {
-            if(pointer <= arr.length-1){
+            if(pointer <= today.size()-1){
                 //下一个单词
                 a.setBackground(Color.white);
                 b.setBackground(Color.white);
                 c.setBackground(Color.white);
                 d.setBackground(Color.white);
                 //下一个单词的信息
-                word.setText(arr[pointer][0]);
-                wordSound.setText(arr[pointer][1]);
-                meaning.setText(arr[pointer][2]);
-                a.setText(arr[pointer][3]);
-                b.setText(arr[pointer][4]);
-                c.setText(arr[pointer][5]);
-                d.setText(arr[pointer][6]);
-                ans = arr[pointer][7];
+                word.setText(today.get(pointer)[0]);
+                wordSound.setText(today.get(pointer)[1]);
+                meaning.setText(today.get(pointer)[2]);
+                a.setText(today.get(pointer)[3]);
+                b.setText(today.get(pointer)[4]);
+                c.setText(today.get(pointer)[5]);
+                d.setText(today.get(pointer)[6]);
+                ans = today.get(pointer)[7];
                 meaning.setVisible(false);
                 hint.setBackground(Color.white);
                 collect.setBackground(Color.white);
@@ -329,6 +368,13 @@ public class Reciteword extends JPanel {
                 recordPanel.setVisible(true);
                 next.setVisible(false);
                 success.setVisible(true);
+                //record(int id, int newid, int wrongid)
+                try {
+                    //当前选择的词书的名字：selectedbook
+                    record(selectedbook,startid+20);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
 
         });
