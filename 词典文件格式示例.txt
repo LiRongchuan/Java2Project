@@ -1,0 +1,12 @@
+# Dictionary 词典文件格式示例
+WordList:
+# <id, english, chinese, liked, choices[0-3], Correct_choice>
+1,apple,苹果,false,option1,option2,option3,option4,2
+2,banana,香蕉,true,option1,option2,option3,option4,3
+...
+
+Metadata:
+Total_Word_Number:14
+Last_Access_Time:<Timestamp>
+Last_Modification_Time:<Timestamp>
+...

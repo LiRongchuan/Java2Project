@@ -12,8 +12,12 @@ import java.util.ArrayList;
 public class Main {
     public static Timestamp systemTime; // 模拟系统时间，人为跳转时间，方便演示
     public static ArrayList<WordBook> WordBooks = new ArrayList<>();
-    // public static WordList wordList_Global = new WordList();
-    public static WordList wordList_Global;
+
+
+    static File dictionary;
+    // 词典，一个存所有单词的文件，用WordList类管理
+    static WordList wordList = new WordList(dictionary);
+
     public static void main(String[] args) throws IOException {
         /**/
         Index index = new Index();
@@ -22,8 +26,8 @@ public class Main {
             File file = new File(ind);
             WordBook wb = new WordBook(file);
             WordBooks.add(wb);
-            wordList_Global = new WordList(file);
-            wordList_Global.AddBook(wb);
+
+            wordList.AddBook(wb);
         }
         /**/
         new Frame().launchFrame();

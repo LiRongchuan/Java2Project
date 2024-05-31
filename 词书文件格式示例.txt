@@ -1,0 +1,19 @@
+# WordBook 词书文件格式示例
+WordList:
+# <id, english, chinese, liked, choices[0-3], Correct_choice>
+1,apple,苹果,false,option1,option2,option3,option4,2
+2,banana,香蕉,true,option1,option2,option3,option4,3
+...
+
+
+WordGroups:
+# <GroupNum 0, Contain[0-9] 10, Last_Number_of_Correctness(R*总题目数目) 11, Next_Review_Time 12, S 13, Full_Mark_in_a_Row 14, Need_to_Review 15>
+1,1,2,3,4,5,6,7,8,9,10,3,<timestamp>,0.36,0,true
+
+
+Metadata:
+Total_Word_Number:14
+Total_WordGroup_Number:1
+Last_Access_Time:<Timestamp>
+Last_Modification_Time:<Timestamp>
+...
