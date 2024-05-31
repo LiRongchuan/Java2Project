@@ -23,6 +23,7 @@ public class Frame extends JFrame {
     public static ChartPage chartPage;
 
     public static StarPage starPage;
+    public static Reciteword reciteword;
 
     public void launchFrame(){
         this.setLayout(null);
@@ -49,6 +50,7 @@ public class Frame extends JFrame {
         chartPage = new ChartPage();
         this.add(chartPage);
         chartPage.launchPanel();
+
 
 
         this.setTitle("单词记忆软件");
