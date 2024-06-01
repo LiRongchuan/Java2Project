@@ -64,7 +64,11 @@ public class Frame extends JFrame {
 
         /**/
         reciteword = new Reciteword();
-        reciteword.launchPanel();
+        try {
+            reciteword.launchPanel();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         reciteword.setVisible(false);
         this.add(reciteword);
 
