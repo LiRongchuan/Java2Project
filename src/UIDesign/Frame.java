@@ -18,6 +18,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.sql.Date;
 import java.util.Vector;
@@ -33,7 +35,7 @@ public class Frame extends JFrame {
 
     public static StarPage starPage;
 
-    public void launchFrame(){
+    public void launchFrame() throws IOException {
         this.setLayout(null);
         this.setBounds(X0,Y0,FRAME_WIDTH,FRAME_HEIGHT);
         this.addWindowListener(new WindowAdapter() {
@@ -137,6 +139,7 @@ class HomePage extends JPanel {
                     File newBook = new File("wordbook\\" + selectBook.getName());
                     try {
                         newBook.createNewFile();
+                        Files.copy(selectBook.toPath(), newBook.toPath());
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }

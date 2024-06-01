@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 //import static Back_end.WordBook;
-import static Back_end.WordBook.*;
+
 import static UIDesign.Util.*;
 import javax.swing.*;
 import java.awt.*;
