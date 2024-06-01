@@ -5,9 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e75b8209-fd3c-432c-957e-2b066b66258d" name="更改" comment="更改">
+      <change afterPath="$PROJECT_DIR$/wordbook/词典文件格式示例.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/UIDesign/Frame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UIDesign/Frame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UIDesign/Reciteword.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UIDesign/Reciteword.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UIDesign/Reciteword.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wordbook/词书文件格式示例.txt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

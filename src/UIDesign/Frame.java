@@ -31,7 +31,7 @@ public class Frame extends JFrame {
     public static HomePage homePage;
     public static SettingPage settingPage;
     public static ChartPage chartPage;
-    public static Reciteword reciteword;
+    //public static Reciteword reciteword;
 
     public static StarPage starPage;
 
@@ -64,12 +64,12 @@ public class Frame extends JFrame {
         chartPage.setVisible(false);
         this.add(chartPage);
 
-        /**/
+        /*
         reciteword = new Reciteword();
         reciteword.launchPanel();
         reciteword.setVisible(false);
         this.add(reciteword);
-
+        /**/
 
         this.setTitle("单词记忆软件");
         this.setVisible(true);
@@ -92,7 +92,7 @@ class HomePage extends JPanel {
         learn.setBounds(35, 40, 100, 100);
         learn.addActionListener(e -> {
             Frame.homePage.setVisible(false);
-            Frame.reciteword.setVisible(true);
+            //Frame.reciteword.setVisible(true);
         });
         setting = new JButton("我的");
         setting.setBounds(35, 220, 100, 100);
@@ -138,7 +138,7 @@ class HomePage extends JPanel {
                     System.out.println("File to import: " + selectBook.getAbsolutePath());
                     File newBook = new File("wordbook\\" + selectBook.getName());
                     try {
-                        newBook.createNewFile();
+                        newBook.delete();
                         Files.copy(selectBook.toPath(), newBook.toPath());
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
