@@ -1,8 +1,6 @@
 package Back_end;
 
 import java.io.*;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class WordBook {
@@ -162,7 +160,7 @@ public class WordBook {
             e.printStackTrace();  // 处理异常，打印错误轨迹
         }
     }
-    public static boolean checkstar(String word) throws IOException {
+    public static boolean checkStar(String word) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader("star.txt"))){
             String line;
             while ((line = reader.readLine()) != null) {

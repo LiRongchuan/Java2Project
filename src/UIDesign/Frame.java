@@ -16,10 +16,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.sql.Date;
 import java.util.Vector;
@@ -362,8 +363,10 @@ class ChartPage extends JPanel {
 }
 class StarPage extends JPanel {
     JButton back, information, star;
-    JPanel pagePanel, wordPanel;
-    WordManagerPanel wordManagerPanel;
+    JPanel pagePanel;
+    static JPanel wordPanel;
+    static WordManagerPanel wordManagerPanel;
+
     public void launchPanel(){
         this.setLayout(null);
         this.setBounds(0,0,FRAME_WIDTH,FRAME_HEIGHT);
@@ -391,8 +394,6 @@ class StarPage extends JPanel {
         pagePanel.add(information);
         pagePanel.add(star);
         this.add(pagePanel);
-
-
         wordPanel = new JPanel();
         wordPanel.setBounds(195, 20, 570, FRAME_HEIGHT-80);
         wordPanel.setBackground(Color.PINK);
@@ -401,20 +402,24 @@ class StarPage extends JPanel {
         wordManagerPanel = new WordManagerPanel();
         wordManagerPanel.setBounds(20, 40, 520, FRAME_HEIGHT-150);
         wordPanel.add(wordManagerPanel);
-        this.add(wordPanel);
-
+        Frame.starPage.add(wordPanel);
     }
+
 }
 class WordManagerPanel extends JPanel {
     JTable table;
-    DefaultTableModel model;
+    static DefaultTableModel model;
     CheckBoxRenderer checkBoxRenderer;
     CheckBoxEditor checkBoxEditor;
+
+    static int starPtr = 0;
+
+    static ArrayList<String[]> starList = new ArrayList<>();
 
     public WordManagerPanel() {
         this.setBackground(Color.pink);
         // 初始化表格模型
-        String[] columnNames = {"选择", "单词", "意义", "词书"};
+        String[] columnNames = {"选择", "单词", "读音", "释义"};
         model = new DefaultTableModel(columnNames, 0) {
             @Override
             public Class<?> getColumnClass(int columnIndex) {
@@ -445,16 +450,18 @@ class WordManagerPanel extends JPanel {
             }
         };
         table.setBackground(Color.pink);
-
-        // 添加数据到表格
-        for (int i = 0; i < 5; i++) {
-            Vector<Object> rowData = new Vector<>();
-            rowData.add(false); // 多选框状态，默认未选中
-            rowData.add("单词" + (i + 1));
-            rowData.add("意义" + (i + 1));
-            rowData.add("词书" + (i + 1)); // 添加词书数据
-            model.addRow(rowData);
+        try (BufferedReader reader = new BufferedReader(new FileReader("star.txt"))){
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                starList.add(new String[]{parts[0], parts[1], parts[2]});
+            }
         }
+        catch (IOException e) {
+            e.printStackTrace();  // 处理异常，打印错误轨迹
+        }
+        // 添加数据到表格
+        updateStar();
 
         // 设置复选框列的宽度
         TableColumn checkBoxColumn = table.getColumnModel().getColumn(0);
@@ -485,6 +492,19 @@ class WordManagerPanel extends JPanel {
         @Override
         public Object getCellEditorValue() {
             return ((JCheckBox)editorComponent).isSelected();
+        }
+    }
+
+
+    public static void updateStar(){
+        while(starPtr<starList.size()){
+            Vector<Object> rowData = new Vector<>();
+            rowData.add(false); // 多选框状态，默认未选中
+            rowData.add(starList.get(starPtr)[0]);
+            rowData.add(starList.get(starPtr)[1]);
+            rowData.add(starList.get(starPtr)[2]); // 添加词书数据
+            model.addRow(rowData);
+            starPtr++;
         }
     }
 }

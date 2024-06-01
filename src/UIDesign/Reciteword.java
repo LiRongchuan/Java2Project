@@ -3,21 +3,20 @@ import com.toedter.calendar.JCalendar;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 //import static Back_end.WordBook;
 import static Back_end.WordBook.*;
 import static UIDesign.Util.*;
-import javax.swing.*;
-import java.awt.*;
+import static UIDesign.WordManagerPanel.starList;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import Back_end.WordBook;
 public class Reciteword extends JPanel {
     public static JButton back, a, b, c, d, collect, hint, next,learnagain;
     public static JPanel headingPanel, mainPanel, recordPanel,selectBookPanel;
@@ -45,8 +44,6 @@ public class Reciteword extends JPanel {
 //        headingPanel.setBackground(Color.PINK);
 //        JPanel panel = new ImagePanel(new ImageIcon("path/to/your/image.jpg").getImage());
         headingPanel.setLayout(null);
-
-
         // 创建按钮
 //        back = new JButton("返回");
         back = new IconButton(new ImageIcon("backbutton.png"));
@@ -122,6 +119,11 @@ public class Reciteword extends JPanel {
 
 
         //开始背词 button
+
+        //读收藏
+
+
+
         JButton start = new RoundedButton();
         start.setText("START");
         start.setFont(new Font("Monospaced", Font.BOLD, 20));
@@ -152,7 +154,7 @@ public class Reciteword extends JPanel {
                 d.setText(today.get(0)[6]);
                 d.setFont(new Font("幼圆", Font.BOLD, 15));
                 ans = today.get(0)[7];
-                if(checkstar(word.getText())){ //在收藏中
+                if(checkStar(word.getText())){ //在收藏中
                     collect.setIcon(new ImageIcon("star_light.png"));
                     System.out.println("y");
                 }else{//不在收藏中
@@ -215,10 +217,13 @@ public class Reciteword extends JPanel {
             //TODO：怎么加入收藏列表里
             //收藏
             //加入star.txt中
+            System.out.println(word.getText());
             try {
-                if(!checkstar(word.getText())){//不在收藏中
+                if(!checkStar(word.getText())){
                     collect.setIcon(new ImageIcon("star_light.png"));
+                    starList.add(new String[]{word.getText(), wordSound.getText(), meaning.getText()});
                     star(word.getText(), wordSound.getText(), meaning.getText(), a.getText(), b.getText(), c.getText(), d.getText(), ans);
+                    WordManagerPanel.updateStar();
                 }
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
@@ -481,7 +486,7 @@ public class Reciteword extends JPanel {
                 hint.setIcon(new ImageIcon("hint.png"));
 //                collect.setIcon(new ImageIcon("star.png"));
                 try {
-                    if(checkstar(word.getText())){ //在收藏中
+                    if(checkStar(word.getText())){ //在收藏中
                         collect.setIcon(new ImageIcon("star_light.png"));
 //                        collect.setBackground(Color.yellow);
                         System.out.println("y");
