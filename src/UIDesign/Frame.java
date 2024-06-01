@@ -31,7 +31,7 @@ public class Frame extends JFrame {
     public static HomePage homePage;
     public static SettingPage settingPage;
     public static ChartPage chartPage;
-    //public static Reciteword reciteword;
+    public static Reciteword reciteword;
 
     public static StarPage starPage;
 
@@ -64,7 +64,7 @@ public class Frame extends JFrame {
         chartPage.setVisible(false);
         this.add(chartPage);
 
-        /*
+        /**/
         reciteword = new Reciteword();
         try {
             reciteword.launchPanel();
@@ -96,7 +96,7 @@ class HomePage extends JPanel {
         learn.setBounds(35, 40, 100, 100);
         learn.addActionListener(e -> {
             Frame.homePage.setVisible(false);
-            //Frame.reciteword.setVisible(true);
+            Frame.reciteword.setVisible(true);
         });
         setting = new JButton("我的");
         setting.setBounds(35, 220, 100, 100);

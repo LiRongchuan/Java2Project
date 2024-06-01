@@ -59,7 +59,6 @@ public class WordBook {
              BufferedReader reader2 = new BufferedReader(new FileReader(wrongFile))){
             String line;
 //            int pointer = 0;
-
             //1,banana,[bə'nɑːnə],n.香蕉,香蕉,橘子,西瓜,苹果,香蕉
             //new word
             while ((line = reader.readLine()) != null) {
