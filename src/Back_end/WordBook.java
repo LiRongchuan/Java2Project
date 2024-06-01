@@ -155,5 +155,28 @@ public class WordBook {
             e.printStackTrace();  // 处理异常，打印错误轨迹
         }
     }
+    public static void star(String word, String wordSound, String meaning, String a, String b, String c, String d, String ans) throws IOException{
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("star.txt", true))){
+            writer.write(word+","+ wordSound+","+meaning+","+a+","+b+","+c+","+d+","+ans + "\n");
+        }
+        catch (IOException e) {
+            e.printStackTrace();  // 处理异常，打印错误轨迹
+        }
+    }
+    public static boolean checkstar(String word) throws IOException {
+        try (BufferedReader reader = new BufferedReader(new FileReader("star.txt"))){
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if(parts[0].equals(word)){
+                    return true;
+                }
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();  // 处理异常，打印错误轨迹
+        }
+        return false;
+    }
 
 }
