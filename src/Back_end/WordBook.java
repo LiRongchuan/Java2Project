@@ -178,4 +178,13 @@ public class WordBook {
         return false;
     }
 
+    public static void initialize(String name) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("record.txt", true))){
+            writer.write(name + "," + 0 + "\n");
+        }
+        catch (IOException e) {
+            e.printStackTrace();  // 处理异常，打印错误轨迹
+        }
+    }
+
 }
