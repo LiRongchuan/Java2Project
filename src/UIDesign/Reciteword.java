@@ -3,6 +3,8 @@ import com.toedter.calendar.JCalendar;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -25,19 +27,32 @@ public class Reciteword extends JPanel {
     public static boolean correct;
     public static int startid;
     public static String wrongFile = "wrong.txt";
+    public static String selectedbook;
+    public static String path;
+    public static List<String[]> today;
+    public static String eng, sound, mean, optionA, optionB, optionC, optionD;
     JCalendar calendar;
 
     public void launchPanel() throws IOException {
         this.setLayout(null);
         this.setBounds(0,0,FRAME_WIDTH,FRAME_HEIGHT);
+        this.setBackground(Color.white);
         this.setVisible(false);
 
-        headingPanel = new JPanel();
+//        headingPanel = new JPanel();
+        headingPanel = new ImagePanel(new ImageIcon("panel1.jpg").getImage());
         headingPanel.setBounds(0, 0, FRAME_WIDTH, FRAME_HEIGHT* 1/10);
-        headingPanel.setBackground(Color.PINK);
+//        headingPanel.setBackground(Color.PINK);
+//        JPanel panel = new ImagePanel(new ImageIcon("path/to/your/image.jpg").getImage());
         headingPanel.setLayout(null);
-        back = new JButton("返回");
-        back.setBounds(10,5, 80, 50);
+
+
+        // 创建按钮
+//        back = new JButton("返回");
+        back = new IconButton(new ImageIcon("backbutton.png"));
+//        back.setBounds(10,5, 80, 50);
+        back.setSize(75, 30);
+        back.setLocation(25,14);
         back.addActionListener(e -> {
             Frame.reciteword.setVisible(false);
             Frame.homePage.setVisible(true);
@@ -45,12 +60,12 @@ public class Reciteword extends JPanel {
         headingPanel.add(back);
 
         heading = new JLabel("今日单词");
-        heading.setLocation(FRAME_WIDTH/2, 0);
+        heading.setLocation(FRAME_WIDTH/2-60, 7);
         heading.setSize(150,50);
         heading.setForeground(Color.BLACK);
 //        heading.setBackground(Color.RED);
 //        heading.setOpaque(true);
-        heading.setFont(new Font("TimesRoman", Font.BOLD, 15));
+        heading.setFont(new Font("幼圆", Font.BOLD, 30));
         headingPanel.add(heading);
         this.add(headingPanel);
 
@@ -60,23 +75,24 @@ public class Reciteword extends JPanel {
         int main_height = FRAME_HEIGHT*2/3;
 
         //选择词书 panel
-        selectBookPanel = new JPanel();
+//        selectBookPanel = new JPanel();
+        selectBookPanel = new RoundImagePanel(new ImageIcon("panel1.jpg").getImage());
         selectBookPanel.setBounds(main_x, main_y, main_width, main_height);
-        selectBookPanel.setBackground(Color.PINK);
+//        selectBookPanel.setBackground(Color.PINK);
         selectBookPanel.setLayout(null);
         selectBookPanel.setVisible(true);
 
         //词书列表
         select = new JLabel("选择词书");
         select.setBounds(main_width/2-50, main_y/2-10, 250, 100);
-        select.setFont(new Font("TimesRoman", Font.BOLD, 30));
+        select.setFont(new Font("幼圆", Font.BOLD, 30));
         selectBookPanel.add(select);
 
         JComboBox<String> comboBox = new JComboBox<>();
         comboBox.setBounds(main_x+80, main_y+40, 250, 50);
-        comboBox.setBackground(Color.white);
+        comboBox.setBackground(pink1);
 
-//        WordBook wordBook = new WordBook();
+
         //所有文件名+当前想要的文件名的路径
         List<String> files = filePath("BookList.txt");
 
@@ -86,95 +102,149 @@ public class Reciteword extends JPanel {
 //        comboBox.addItem("四级词汇");
 //        comboBox.addItem("六级词汇");
 
+//        comboBox.addItemListener(new ItemListener() {
+//            @Override
+//            public void itemStateChanged(ItemEvent e) {
+//                if (e.getStateChange() == ItemEvent.SELECTED) {
+//                    // 获取选中项的文本
+//                    selectedbook = (String) e.getItem();
+//                    System.out.println("选中的文本是: " + selectedbook);
+//                }
+//            }
+//        });
+
         //当前选择的词书的名字
-        String selectedbook = (String) comboBox.getSelectedItem();
-        //path是当前选择的词书的路径
-        String path = findPath("BookList.txt" ,selectedbook);
-        selectBookPanel.add(comboBox);
+//        selectedbook = (String) comboBox.getSelectedItem();
+//        System.out.println(selectedbook);
+//        //path是当前选择的词书的路径
+//        String path = findPath("BookList.txt" ,selectedbook);
+//        selectBookPanel.add(comboBox);
 
 
         //开始背词 button
-        JButton start = new JButton("开始");
-        start.setBounds(main_width/2-40, main_y+150, 80, 50);
+        JButton start = new RoundedButton();
+        start.setText("START");
+        start.setFont(new Font("Monospaced", Font.BOLD, 20));
+        start.setBounds(main_width/2-40, main_y+150, 130, 50);
         start.setBackground(Color.white);
         selectBookPanel.add(start);
         start.addActionListener(e -> {
             selectBookPanel.setVisible(false);
             mainPanel.setVisible(true);
             next.setVisible(true);
+            selectedbook = (String) comboBox.getSelectedItem();
+            try {
+                path = findPath("BookList.txt" ,selectedbook);
+                startid = 0;
+                startid = pre_record(selectedbook);
+//                List<String[]> today;
+                today = todayRecite(startid, path, wrongFile);
+                word.setText(today.get(0)[0]);
+                wordSound.setText(today.get(0)[1]);
+                meaning.setText(today.get(0)[2]);
+                meaning.setFont(new Font("Monospaced", Font.BOLD, 15));
+                a.setText(today.get(0)[3]);
+                a.setFont(new Font("幼圆", Font.BOLD, 15));
+                b.setText(today.get(0)[4]);
+                b.setFont(new Font("幼圆", Font.BOLD, 15));
+                c.setText(today.get(0)[5]);
+                c.setFont(new Font("幼圆", Font.BOLD, 15));
+                d.setText(today.get(0)[6]);
+                d.setFont(new Font("幼圆", Font.BOLD, 15));
+                ans = today.get(0)[7];
+                if(checkstar(word.getText())){ //在收藏中
+                    collect.setIcon(new ImageIcon("star_light.png"));
+                    System.out.println("y");
+                }else{//不在收藏中
+                    collect.setIcon(new ImageIcon("star.png"));
+                    System.out.println("n");
+                }
+                System.out.println(today.size());
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+
         });
+        selectBookPanel.add(comboBox);
         this.add(selectBookPanel);
 
 
         //主panel
-        mainPanel = new JPanel();
-        mainPanel.setBackground(Color.PINK);
+//        mainPanel = new JPanel();
+        mainPanel = new RoundImagePanel(new ImageIcon("panel1.jpg").getImage());
+//        mainPanel.setBackground(Color.PINK);
         mainPanel.setBounds(main_x, main_y, main_width, main_height);
         mainPanel.setLayout(null);
         mainPanel.setVisible(false);
 
 
         //拿到要用的今日背单词的数组 String[30][8]
-        startid = 0;
-        startid = pre_record(selectedbook);
-        List<String[]> today;
-        today = todayRecite(startid, path, wrongFile);
+//        startid = 0;
+//        startid = pre_record(selectedbook);
+//        List<String[]> today;
+//        today = todayRecite(startid, path, wrongFile);
 
 
         //单词 label
-        String eng = today.get(0)[0];
+//        String eng = today.get(0)[0];
         word = new JLabel();
-        word.setText(eng);
-        word.setBounds(main_width/2-50, main_y/2-50, 250, 100);
-        word.setFont(new Font("TimesRoman", Font.BOLD, 30));
+//        word.setText(eng);
+        word.setBounds(main_width/2-65, main_y/2-50, 300, 100);
+        word.setFont(new Font("Monospaced", Font.BOLD, 30));
         mainPanel.add(word);
 
         //音标 label
-        String sound = today.get(0)[1];
+//        String sound = today.get(0)[1];
         wordSound = new JLabel();
-        wordSound.setText(sound);
-        wordSound.setBounds(main_width/2-35, main_y/2-10, 180, 80);
-        wordSound.setFont(new Font("TimesRoman", Font.BOLD, 20));
+//        wordSound.setText(sound);
+        wordSound.setBounds(main_width/2-57, main_y/2-10, 180, 80);
+        wordSound.setFont(new Font("Monospaced", Font.BOLD, 20));
         mainPanel.add(wordSound);
 
         //收藏 button
-        collect = new JButton("star");
-        collect.setBounds(main_width/2+100, main_height/7, 80, 50);
-        if(checkstar(word.getText())){ //在收藏中
-            collect.setBackground(Color.yellow);
-            System.out.println("y");
-        }else{//不在收藏中
-            collect.setBackground(Color.white);
-            System.out.println("n");
-        }
+        collect = new IconButton(new ImageIcon("star.png"));
+        collect.setBounds(main_width/2+180, main_height/7-40, 30, 30);
+//        if(checkstar(word.getText())){ //在收藏中
+//            collect.setIcon(new ImageIcon("star_light.png"));
+//            System.out.println("y");
+//        }else{//不在收藏中
+//            collect.setIcon(new ImageIcon("star.png"));
+//            System.out.println("n");
+//        }
         collect.addActionListener(e -> {
             //TODO：怎么加入收藏列表里
             //收藏
             //加入star.txt中
             try {
-                star(word.getText(), wordSound.getText(), meaning.getText(), a.getText(), b.getText(), c.getText(), d.getText(), ans);
+                if(!checkstar(word.getText())){//不在收藏中
+                    collect.setIcon(new ImageIcon("star_light.png"));
+                    star(word.getText(), wordSound.getText(), meaning.getText(), a.getText(), b.getText(), c.getText(), d.getText(), ans);
+                }
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
-            collect.setBackground(Color.YELLOW);
+//            collect.setBackground(Color.YELLOW);
         });
         mainPanel.add(collect);
 
         //提示 button call 直接加label
-        hint = new JButton("hint");
-        hint.setBounds(main_width/2+200, main_height/7, 80, 50);
+//        hint = new JButton("hint");
+        hint = new IconButton(new ImageIcon("hint.png"));
+        hint.setBounds(main_width/2+240, main_height/7-40, 30, 30);
         hint.setBackground(Color.white);
         hint.addActionListener(e -> {
             //提示
-            hint.setBackground(Color.CYAN);
+//            hint.setBackground(Color.CYAN);
+            hint.setIcon(new ImageIcon("hint_light.png"));
             meaning.setVisible(true);
         });
         mainPanel.add(hint);
 
         //释义详情 label
         meaning = new JLabel();
-        String mean = today.get(0)[2];
-        meaning.setText(mean);
+//        String mean = today.get(0)[2];
+//        meaning.setText(mean);
+        meaning.setFont(new Font("Monospaced", Font.BOLD, 15));
         meaning.setBounds(main_width/2-40, main_y/2+10, 250, 100);
         meaning.setVisible(false);
         mainPanel.add(meaning);
@@ -182,23 +252,31 @@ public class Reciteword extends JPanel {
 
         //4个选项 button
 //        AtomicReference<String> ans = new AtomicReference<>("苹果");
-        ans = today.get(0)[7];
+//        ans = today.get(0)[7];
 
-        a = new JButton();
-        String optionA = today.get(0)[3];
-        a.setText(optionA);
+//        a = new JButton();
+        a = new RoundedButton();
+//        String optionA = today.get(0)[3];
+//        a.setText(optionA);
+        a.setFont(new Font("Monospaced", Font.BOLD, 15));
         a.setBounds(main_width/2-100, main_y/2+80+10, 200, 40);
-        b = new JButton();
-        String optionB = today.get(0)[4];
-        b.setText(optionB);
+//        b = new JButton();
+        b = new RoundedButton();
+//        String optionB = today.get(0)[4];
+//        b.setText(optionB);
+        b.setFont(new Font("Monospaced", Font.BOLD, 15));
         b.setBounds(main_width/2-100, main_y/2+145+10, 200, 40);
-        c = new JButton();
-        String optionC = today.get(0)[5];
-        c.setText(optionC);
+//        c = new JButton();
+        c = new RoundedButton();
+//        String optionC = today.get(0)[5];
+//        c.setText(optionC);
+        c.setFont(new Font("Monospaced", Font.BOLD, 15));
         c.setBounds(main_width/2-100, main_y/2+145+65+10, 200, 40);
-        d = new JButton();
-        String optionD = today.get(0)[6];
-        d.setText(optionD);
+//        d = new JButton();
+        d = new RoundedButton();
+//        String optionD = today.get(0)[6];
+//        d.setText(optionD);
+        d.setFont(new Font("Monospaced", Font.BOLD, 15));
         d.setBounds(main_width/2-100, main_y/2+145+65+65+10, 200, 40);
 
 //        correct = false;
@@ -206,16 +284,16 @@ public class Reciteword extends JPanel {
             if(a.getText().equals(ans)){
 //                correct = true;
                 //正确
-                a.setBackground(Color.GREEN);
+                a.setBackground(c_green);
             }else{
                 //错误
-                a.setBackground(Color.red);
+                a.setBackground(w_red);
                 if(b.getText().equals(ans)) {
-                    b.setBackground(Color.GREEN);
+                    b.setBackground(c_green);
                 }else if(c.getText().equals(ans)) {
-                    c.setBackground(Color.GREEN);
+                    c.setBackground(c_green);
                 }else{
-                    d.setBackground(Color.GREEN);
+                    d.setBackground(c_green);
                 }
                 try {
                     wrong(word.getText(), wordSound.getText(), meaning.getText(), a.getText(), b.getText(), c.getText(), d.getText(), ans);
@@ -230,16 +308,16 @@ public class Reciteword extends JPanel {
             if(b.getText().equals(ans)){
                 //正确
                 correct = true;
-                b.setBackground(Color.GREEN);
+                b.setBackground(c_green);
             }else{
                 //错误
-                b.setBackground(Color.red);
+                b.setBackground(w_red);
                 if(a.getText().equals(ans)) {
-                    a.setBackground(Color.GREEN);
+                    a.setBackground(c_green);
                 }else if(c.getText().equals(ans)) {
-                    c.setBackground(Color.GREEN);
+                    c.setBackground(c_green);
                 }else{
-                    d.setBackground(Color.GREEN);
+                    d.setBackground(c_green);
                 }
                 try {
                     wrong(word.getText(), wordSound.getText(), meaning.getText(), a.getText(), b.getText(), c.getText(), d.getText(), ans);
@@ -253,16 +331,16 @@ public class Reciteword extends JPanel {
             if(c.getText().equals(ans)){
                 //正确
                 correct = true;
-                c.setBackground(Color.GREEN);
+                c.setBackground(c_green);
             }else{
                 //错误
-                c.setBackground(Color.red);
+                c.setBackground(w_red);
                 if(b.getText().equals(ans)) {
-                    b.setBackground(Color.GREEN);
+                    b.setBackground(c_green);
                 }else if(a.getText().equals(ans)) {
-                    a.setBackground(Color.GREEN);
+                    a.setBackground(c_green);
                 }else{
-                    d.setBackground(Color.GREEN);
+                    d.setBackground(c_green);
                 }
                 try {
                     wrong(word.getText(), wordSound.getText(), meaning.getText(), a.getText(), b.getText(), c.getText(), d.getText(), ans);
@@ -276,16 +354,16 @@ public class Reciteword extends JPanel {
             if(d.getText().equals(ans)){
                 //正确
                 correct = true;
-                d.setBackground(Color.GREEN);
+                d.setBackground(c_green);
             }else{
                 //错误
-                d.setBackground(Color.red);
+                d.setBackground(w_red);
                 if(b.getText().equals(ans)) {
-                    b.setBackground(Color.GREEN);
+                    b.setBackground(c_green);
                 }else if(c.getText().equals(ans)) {
-                    c.setBackground(Color.GREEN);
+                    c.setBackground(c_green);
                 }else{
-                    a.setBackground(Color.GREEN);
+                    a.setBackground(c_green);
                 }
                 try {
                     wrong(word.getText(), wordSound.getText(), meaning.getText(), a.getText(), b.getText(), c.getText(), d.getText(), ans);
@@ -311,9 +389,10 @@ public class Reciteword extends JPanel {
         mainPanel.add(d);
 
         //打卡panel 用于记录打卡情况
-        recordPanel = new JPanel();
+//        recordPanel = new JPanel();
+        recordPanel = new RoundImagePanel(new ImageIcon("pinkback.jpg").getImage());
         recordPanel.setBounds(main_x, main_y, main_width, main_height);
-        recordPanel.setBackground(Color.PINK);
+        recordPanel.setBackground(pinkbackground);
         recordPanel.setLayout(null);
         recordPanel.setVisible(false);
 
@@ -328,21 +407,22 @@ public class Reciteword extends JPanel {
         Calendar calendar = Calendar.getInstance();  // 获取当前日期和时间的Calendar对象
         int day = calendar.get(Calendar.DAY_OF_MONTH); // 当前日
         CalendarPanel calendarPanel = new CalendarPanel(day);
-        calendarPanel.setBounds(main_x-35, main_y-20, main_width*7/8, main_height/2);
-        calendarPanel.setBackground(Color.PINK);
+        calendarPanel.setBounds(main_x-35, main_y-35, main_width*7/8, main_height/2+50);
+        calendarPanel.setBackground(pinkbackground);
         recordPanel.add(calendarPanel);
 
 
         //打卡成功 label
         success = new JLabel("打卡成功");
         success.setBounds(main_x+250, main_y+300, 150, 100);
-        success.setFont(new Font("Monospaced", Font.BOLD, 30));
-        success.setForeground(Color.GREEN);
+        success.setFont(new Font("幼圆", Font.BOLD, 30));
+        success.setForeground(wine);
         success.setVisible(false);
 //        recordPanel.add(success);
+
         //再学一次 button
-        learnagain = new JButton("再学一次");
-        learnagain.setBounds(main_width-30, main_height+20, 110, 50);
+        learnagain = new IconButton(new ImageIcon("again.png"));
+        learnagain.setBounds(main_width-30, main_height+20, 50, 50);
         learnagain.setVisible(false);
         learnagain.addActionListener(e -> {
             //跳到新重新开始
@@ -371,13 +451,12 @@ public class Reciteword extends JPanel {
         this.add(recordPanel);
 
         //下一个  button 不在mainPanel中
-        next = new JButton("next");
-        next.setBounds(main_width, main_height+20, 80, 50);
+        next = new IconButton(new ImageIcon("next.png"));
+        next.setBounds(main_width, main_height+20, 50, 50);
         next.setVisible(false);
 
         //arr中存储今天要学的单词
 
-        System.out.println(today.size());
         //TODO: 从词书txt中获取今天要学的单词
         pointer = 1;
         next.addActionListener(e -> {
@@ -397,14 +476,18 @@ public class Reciteword extends JPanel {
                 d.setText(today.get(pointer)[6]);
                 ans = today.get(pointer)[7];
                 meaning.setVisible(false);
-                hint.setBackground(Color.white);
-                collect.setBackground(Color.white);
+//                hint.setBackground(Color.white);
+//                collect.setBackground(Color.white);
+                hint.setIcon(new ImageIcon("hint.png"));
+//                collect.setIcon(new ImageIcon("star.png"));
                 try {
                     if(checkstar(word.getText())){ //在收藏中
-                        collect.setBackground(Color.yellow);
+                        collect.setIcon(new ImageIcon("star_light.png"));
+//                        collect.setBackground(Color.yellow);
                         System.out.println("y");
                     }else{//不在收藏中
-                        collect.setBackground(Color.white);
+                        collect.setIcon(new ImageIcon("star.png"));
+//                        collect.setBackground(Color.white);
                         System.out.println("n");
                     }
                 } catch (IOException ex) {
