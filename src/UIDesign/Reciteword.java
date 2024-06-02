@@ -3,20 +3,24 @@ import com.toedter.calendar.JCalendar;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 //import static Back_end.WordBook;
 import static Back_end.WordBook.*;
+import static UIDesign.Frame.*;
 import static UIDesign.Util.*;
-import static UIDesign.WordManagerPanel.starList;
-
+import javax.swing.*;
+import java.awt.*;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import Back_end.WordBook;
 public class Reciteword extends JPanel {
     public static JButton back, a, b, c, d, collect, hint, next,learnagain;
     public static JPanel headingPanel, mainPanel, recordPanel,selectBookPanel;
@@ -31,6 +35,9 @@ public class Reciteword extends JPanel {
     public static List<String[]> today;
     public static String eng, sound, mean, optionA, optionB, optionC, optionD;
     JCalendar calendar;
+    public static int wrongtotal;
+    public static int total;
+
 
     public void launchPanel() throws IOException {
         this.setLayout(null);
@@ -44,6 +51,8 @@ public class Reciteword extends JPanel {
 //        headingPanel.setBackground(Color.PINK);
 //        JPanel panel = new ImagePanel(new ImageIcon("path/to/your/image.jpg").getImage());
         headingPanel.setLayout(null);
+
+
         // 创建按钮
 //        back = new JButton("返回");
         back = new IconButton(new ImageIcon("backbutton.png"));
@@ -119,11 +128,6 @@ public class Reciteword extends JPanel {
 
 
         //开始背词 button
-
-        //读收藏
-
-
-
         JButton start = new RoundedButton();
         start.setText("START");
         start.setFont(new Font("Monospaced", Font.BOLD, 20));
@@ -154,7 +158,7 @@ public class Reciteword extends JPanel {
                 d.setText(today.get(0)[6]);
                 d.setFont(new Font("幼圆", Font.BOLD, 15));
                 ans = today.get(0)[7];
-                if(checkStar(word.getText())){ //在收藏中
+                if(checkstar(word.getText())){ //在收藏中
                     collect.setIcon(new ImageIcon("star_light.png"));
                     System.out.println("y");
                 }else{//不在收藏中
@@ -162,6 +166,7 @@ public class Reciteword extends JPanel {
                     System.out.println("n");
                 }
                 System.out.println(today.size());
+                total = today.size();
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
@@ -217,13 +222,10 @@ public class Reciteword extends JPanel {
             //TODO：怎么加入收藏列表里
             //收藏
             //加入star.txt中
-            System.out.println(word.getText());
             try {
-                if(!checkStar(word.getText())){
+                if(!checkstar(word.getText())){//不在收藏中
                     collect.setIcon(new ImageIcon("star_light.png"));
-                    starList.add(new String[]{word.getText(), wordSound.getText(), meaning.getText()});
                     star(word.getText(), wordSound.getText(), meaning.getText(), a.getText(), b.getText(), c.getText(), d.getText(), ans);
-                    WordManagerPanel.updateStar();
                 }
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
@@ -292,6 +294,7 @@ public class Reciteword extends JPanel {
                 a.setBackground(c_green);
             }else{
                 //错误
+                wrongtotal++;
                 a.setBackground(w_red);
                 if(b.getText().equals(ans)) {
                     b.setBackground(c_green);
@@ -316,6 +319,7 @@ public class Reciteword extends JPanel {
                 b.setBackground(c_green);
             }else{
                 //错误
+                wrongtotal++;
                 b.setBackground(w_red);
                 if(a.getText().equals(ans)) {
                     a.setBackground(c_green);
@@ -339,6 +343,7 @@ public class Reciteword extends JPanel {
                 c.setBackground(c_green);
             }else{
                 //错误
+                wrongtotal++;
                 c.setBackground(w_red);
                 if(b.getText().equals(ans)) {
                     b.setBackground(c_green);
@@ -362,6 +367,7 @@ public class Reciteword extends JPanel {
                 d.setBackground(c_green);
             }else{
                 //错误
+                wrongtotal++;
                 d.setBackground(w_red);
                 if(b.getText().equals(ans)) {
                     b.setBackground(c_green);
@@ -381,9 +387,6 @@ public class Reciteword extends JPanel {
 
         //wrong的话就加入wrong.txt
         //banana,[bə'nɑːnə],n.香蕉,香蕉,橘子,西瓜,苹果,香蕉
-//        if(!correct){
-//            wrong(word.getText(), wordSound.getText(), meaning.getText(), a.getText(), b.getText(), c.getText(), d.getText(), ans);
-//        }
         a.setBackground(Color.white);
         b.setBackground(Color.white);
         c.setBackground(Color.white);
@@ -434,6 +437,8 @@ public class Reciteword extends JPanel {
             recordPanel.setVisible(false);
             success.setVisible(false);
             learnagain.setVisible(false);
+            total = 0;
+            wrongtotal = 0;
 //            selectBookPanel.setVisible(true);
             // 重新启动界面
 //            Reciteword reciteword0 = new Reciteword();
@@ -486,7 +491,7 @@ public class Reciteword extends JPanel {
                 hint.setIcon(new ImageIcon("hint.png"));
 //                collect.setIcon(new ImageIcon("star.png"));
                 try {
-                    if(checkStar(word.getText())){ //在收藏中
+                    if(checkstar(word.getText())){ //在收藏中
                         collect.setIcon(new ImageIcon("star_light.png"));
 //                        collect.setBackground(Color.yellow);
                         System.out.println("y");
@@ -511,6 +516,11 @@ public class Reciteword extends JPanel {
                 try {
                     //当前选择的词书的名字：selectedbook
                     record(selectedbook,startid+20);
+
+                    //给记忆曲线
+                    recordname.add(selectedbook);
+                    double rate = wrongtotal/total;
+                    recordrate.add(rate);
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
