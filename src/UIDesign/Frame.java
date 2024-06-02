@@ -6,6 +6,8 @@ import com.toedter.calendar.JCalendar;
 import org.jfree.chart.*;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
@@ -16,6 +18,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -349,11 +352,19 @@ class ChartPage extends JPanel {
         this.setLayout(null);
         this.setBounds(0,0,FRAME_WIDTH,FRAME_HEIGHT);
         this.setVisible(false);
-        pagePanel = new JPanel();
+//        pagePanel = new JPanel();
+        pagePanel = new ImagePanel(new ImageIcon("Artwork_Material/panel1.jpg").getImage());
         pagePanel.setBounds(0, 0, FRAME_WIDTH, FRAME_HEIGHT*1/10);
-        pagePanel.setBackground(Color.PINK);
+//        pagePanel.setBackground(Color.PINK);
         pagePanel.setLayout(null);
-        back = new JButton("返回");
+//        back = new JButton("返回");
+        // 缩放按钮图片大小
+        try {
+            BufferedImage originalImage = ImageIO.read(new File("Artwork_Material/backbutton.png"));
+            back = new IconButton(new ImageIcon(originalImage.getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         back.setBounds(10, 5,80,50);
         back.addActionListener(e -> {
             Frame.chartPage.setVisible(false);
@@ -362,16 +373,20 @@ class ChartPage extends JPanel {
         pagePanel.add(back);
 
         heading = new JLabel("今日单词");
-        heading.setLocation(FRAME_WIDTH/2-40, 5);
+//        heading.setLocation(FRAME_WIDTH/2-40, 5);
+        heading.setLocation(FRAME_WIDTH / 2 - 63, 5);
         heading.setSize(150,50);
         heading.setForeground(Color.BLACK);
-        heading.setFont(new Font("TimesRoman", Font.BOLD, 30));
+//        heading.setFont(new Font("TimesRoman", Font.BOLD, 30));
+        heading.setFont(new Font("幼圆", Font.BOLD, 30));
         pagePanel.add(heading);
         this.add(pagePanel);
 
-        graphPanel = new JPanel();
-        graphPanel.setBounds(FRAME_WIDTH/8, FRAME_HEIGHT/6, FRAME_WIDTH*3/4, FRAME_HEIGHT*2/3+55);
-        graphPanel.setBackground(Color.PINK);
+//        graphPanel = new JPanel();
+        graphPanel = new ImagePanel(new ImageIcon("Artwork_Material/panel1.jpg").getImage());
+//        graphPanel.setBounds(FRAME_WIDTH/8, FRAME_HEIGHT/6, FRAME_WIDTH*3/4, FRAME_HEIGHT*2/3+55);
+        graphPanel.setBounds(0, FRAME_HEIGHT / 10, FRAME_WIDTH, FRAME_HEIGHT * 9 / 10);
+//        graphPanel.setBackground(Color.PINK);
         graphPanel.setLayout(null);
 
         //////////////////////////////////////////////
@@ -406,23 +421,28 @@ class ChartPage extends JPanel {
         );
 
         chartPanel = new ChartPanel(lineChart);
-        chartPanel.setBounds(22, 13, FRAME_WIDTH*4/6+20, FRAME_HEIGHT*2/3);
+//        chartPanel.setBounds(22, 13, FRAME_WIDTH*4/6+20, FRAME_HEIGHT*2/3);
+        chartPanel.setBounds(FRAME_WIDTH / 6 - 10, 13, FRAME_WIDTH * 4 / 6 + 20, FRAME_HEIGHT * 2 / 3);
         chartPanel.setBackground(Color.pink);
 //        chartPanel.setVisible(false);
-        lineChart.setBackgroundPaint(Color.white);
+        lineChart.setBackgroundImage(new ImageIcon("Artwork_Material/淡粉.jpeg").getImage());
+//        lineChart.setBackgroundPaint(Color.white);
         graphPanel.add(chartPanel);
 
         checkBoxes = new JCheckBox[lines.length];
         JPanel checkBoxPanel = new JPanel();
-        checkBoxPanel.setBounds(200, FRAME_WIDTH/3+146, 200, 40);
-        checkBoxPanel.setBackground(Color.PINK);
+//        checkBoxPanel.setBounds(200, FRAME_WIDTH/3+146, 200, 40);
+        checkBoxPanel.setBounds(FRAME_WIDTH / 2 - 100, FRAME_WIDTH / 3 + 146, 200, 40);
+//        checkBoxPanel.setBackground(Color.PINK);
         //checkBoxPanel.setBounds(chartX, chartY-checkBoxHeight, chartWidth, checkBoxHeight);
+        checkBoxPanel.setOpaque(false); // 设置为透明
         checkBoxPanel.setLayout(new BoxLayout(checkBoxPanel, BoxLayout.X_AXIS));
         for (int i = 0; i < checkBoxes.length; i++) {
             checkBoxes[i] = new JCheckBox(lines[i], true);
             checkBoxes[i].setForeground(Color.black); // 设置文字颜色为红色
-            checkBoxes[i].setBackground(Color.pink); // 设置背景颜色为黄色
-            checkBoxes[i].setOpaque(true); // 设置为不透明
+//            checkBoxes[i].setBackground(Color.pink); // 设置背景颜色为黄色
+//            checkBoxes[i].setOpaque(true); // 设置为不透明
+            checkBoxes[i].setOpaque(false); // 设置为透明
             checkBoxes[i].addItemListener(e -> updateChart());
             checkBoxPanel.add(checkBoxes[i]);
         }
