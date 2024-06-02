@@ -35,6 +35,8 @@ public class Frame extends JFrame {
     public static Reciteword reciteword;
 
     public static StarPage starPage;
+    public static ArrayList<String> recordname;
+    public static ArrayList<Double> recordrate;
 
     public void launchFrame() throws IOException {
         this.setLayout(null);
